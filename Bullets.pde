@@ -6,22 +6,38 @@ class Bullets {
     }
 
     void draw() {
-        for (Bullet bullet: array) {
-            bullet.draw();
-        }
+        for (Bullet bullet: array) bullet.draw();
     }
 
-    void step() {
-        for (int i = 0; i < array.size(); i++) {
-            Bullet bullet = array.get(i);
-            bullet.step();
+    void stepCollideEnemies() {
+        array.removeIf(new Predicate<Bullet>() {
+            public boolean test(Bullet bullet) {
+                bullet.step();
 
-            // Remove the off-screen bullets
-            if (bullet.offScreen()) {
-                array.remove(i);
-                i--;
+                if (bullet.offScreen()) {
+                    return true;
+                } else {
+                    for (Enemy enemy: enemies.array) {
+                        if (enemy.touching(bullet.x, bullet.y)) {
+                            effects.add(new Effect(resources.explosion, bullet.x, bullet.y));
+                            enemy.health -= bullet.damage; 
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
             }
-        }
+        });
+    }
+
+    void stepCollidePlayer() {
+        array.removeIf(new Predicate<Bullet>() {
+            public boolean test(Bullet bullet) {
+                bullet.step();
+                return bullet.offScreen();
+            }
+        });
     }
 }
 
@@ -31,7 +47,7 @@ class Bullet {
     float deltaX;
     float deltaY;
     PImage image;
-    int damage;
+    int damage = 10;
     
     Bullet(float x, float y, float deltaX, float deltaY, PImage image) {
         this.x = x;
@@ -42,12 +58,12 @@ class Bullet {
     }
   
     void step() {
-        x += deltaX;
-        y += deltaY;
+        x += deltaX / frameRate;
+        y += deltaY / frameRate;
     }
   
     void draw() {
-        drawImage(image, x, y, atan2(deltaY, deltaX));
+        drawImage(image, x, y);
     }
 
     boolean offScreen() {

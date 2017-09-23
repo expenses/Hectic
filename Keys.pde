@@ -11,7 +11,7 @@ class Keys {
     boolean slow = false;
 }
 
-void keyPressed() {
+public void keyPressed() {
     switch (keyCode) {
         case UP:
             keys.up = true;
@@ -37,7 +37,7 @@ void keyPressed() {
     }
 }
 
-void keyReleased() {
+public void keyReleased() {
     switch (keyCode) {
         case UP:
             keys.up = false;

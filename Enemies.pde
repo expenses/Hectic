@@ -2,15 +2,16 @@ class Enemies {
     ArrayList<Enemy> array = new ArrayList<Enemy>();
 
     void step() {
-        for (Enemy enemy: array) {
-            enemy.step();
-        }
+        array.removeIf(new Predicate<Enemy>() {
+            public boolean test(Enemy enemy) {
+                enemy.step();
+                return enemy.offScreen() || enemy.dead();
+            }
+        });
     }
 
     void draw() {
-        for (Enemy enemy: array) {
-            enemy.draw();
-        }
+        for (Enemy enemy: array) enemy.draw();
     }
 
     void add(Enemy enemy) {
@@ -18,32 +19,59 @@ class Enemies {
     }
 }
 
-abstract class Enemy {
+class Enemy {
+    final float EDGE_PADDING = 100;
+
     PImage image;
-    float x;
-    float y;
+    Movement movement;
+    float cooldown = 0;
     int health;
 
-    abstract void step();
+    void step() {
+        movement.step();
+    }
+
+    boolean dead() {
+        return health <= 0;
+    }
 
     void draw() {
-        drawImage(image, x, y, 0);
+        drawImage(image, movement.x, movement.y);
+    }
+
+    boolean offScreen() {
+        return movement.x < -EDGE_PADDING || movement.x > width  + EDGE_PADDING ||
+               movement.y < -EDGE_PADDING || movement.y > height + EDGE_PADDING;
+    }
+
+    boolean touching(float x, float y) {
+        return x >= movement.x - image.width  && x <= movement.x + image.width &&
+               y >= movement.y - image.height && y <= movement.y + image.height;
     }
 }
 
 class Bat extends Enemy {
-    float horizontal = 0;
-
-    Bat(Resources resources, float x, float y) {
-        this.x = x;
-        this.y = y;
+    Bat(Movement movement) {
+        this.movement = movement;
         this.image = resources.bat;
+        this.health = 20;
+    }
+}
+
+class Gargoyle extends Enemy {
+    Gargoyle(Movement movement) {
+        this.movement = movement;
+        this.image = resources.gargoyle;
+        this.health = 40;
     }
 
     void step() {
-        horizontal += 0.05;
+        movement.step();
+        cooldown -= 1.0 / frameRate;
 
-        x += cos(horizontal);
-        y += 0.75;
+        if (cooldown < 0) {
+            enemyBullets.add(new Bullet(movement.x, movement.y, 0, 100, resources.gargoyleBullet));
+            cooldown = 1;
+        }   
     }
 }
