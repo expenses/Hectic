@@ -27,8 +27,12 @@ class Enemy {
     float cooldown = 0;
     int health;
 
+    float hitboxWidth;
+    float hitboxHeight;
+
     void step() {
         movement.step();
+        if (player.touchingEnemy(this)) player.damage();
     }
 
     boolean dead() {
@@ -37,6 +41,23 @@ class Enemy {
 
     void draw() {
         drawImage(image, movement.x, movement.y);
+        if (DEBUG) rect(movement.x, movement.y, hitboxWidth, hitboxHeight);
+    }
+
+    float left() {
+        return movement.x - hitboxWidth / 2.0;
+    }
+
+    float right() {
+        return movement.x + hitboxWidth / 2.0;
+    }
+
+    float top() {
+        return movement.y - hitboxHeight / 2.0;
+    }
+
+    float bottom() {
+        return movement.y + hitboxHeight / 2.0;
     }
 
     boolean offScreen() {
@@ -45,8 +66,7 @@ class Enemy {
     }
 
     boolean touching(float x, float y) {
-        return x >= movement.x - image.width  && x <= movement.x + image.width &&
-               y >= movement.y - image.height && y <= movement.y + image.height;
+        return x >= left() && x <= right() && y >= top() && y <= bottom();
     }
 }
 
@@ -55,14 +75,20 @@ class Bat extends Enemy {
         this.movement = movement;
         this.image = resources.bat;
         this.health = 20;
+        this.hitboxWidth = 25;
+        this.hitboxHeight = 20;
     }
 }
 
 class Gargoyle extends Enemy {
+    final float COOLDOWN = 1;
+
     Gargoyle(Movement movement) {
         this.movement = movement;
         this.image = resources.gargoyle;
         this.health = 40;
+        this.hitboxWidth = 45;
+        this.hitboxHeight = 20;
     }
 
     void step() {
@@ -70,8 +96,8 @@ class Gargoyle extends Enemy {
         cooldown -= 1.0 / frameRate;
 
         if (cooldown < 0) {
-            enemyBullets.add(new Bullet(movement.x, movement.y, 0, 100, resources.gargoyleBullet));
-            cooldown = 1;
+            enemyBullets.add(new GargoyleBullet(movement.x, movement.y));
+            cooldown = COOLDOWN;
         }   
     }
 }

@@ -32,6 +32,11 @@ void setup() {
     // Set the framerate
     frameRate(60);
 
+    // Settings for drawing hitboxes
+    noFill();
+    stroke(255, 0, 0);
+    rectMode(CENTER);
+
     // Load the resources
     resources = new Resources();
 
@@ -42,7 +47,7 @@ void setup() {
     playerBullets = new Bullets();
     enemyBullets = new Bullets();
     effects = new Effects();
-    stage = new Stage().one();
+    stage = stageOne();
 }
 
 void update() {
@@ -56,11 +61,11 @@ void update() {
 
 void draw() {
     background(0);
-    drawBackground();
 
     if (!paused) update();
 
     // Draw the main items
+    stage.draw();
     playerBullets.draw();
     player.draw();
     enemyBullets.draw();

@@ -1,3 +1,5 @@
+final int PLAYER_BULLET_DAMAGE = 10;
+
 class Bullets {
     ArrayList<Bullet> array = new ArrayList<Bullet>();
 
@@ -20,7 +22,7 @@ class Bullets {
                     for (Enemy enemy: enemies.array) {
                         if (enemy.touching(bullet.x, bullet.y)) {
                             effects.add(new Effect(resources.explosion, bullet.x, bullet.y));
-                            enemy.health -= bullet.damage; 
+                            enemy.health -= PLAYER_BULLET_DAMAGE; 
                             return true;
                         }
                     }
@@ -35,7 +37,15 @@ class Bullets {
         array.removeIf(new Predicate<Bullet>() {
             public boolean test(Bullet bullet) {
                 bullet.step();
-                return bullet.offScreen();
+                
+                if (bullet.offScreen()) {
+                    return true;
+                } else if (player.touching(bullet.x, bullet.y)) {
+                    player.damage();
+                    return true;
+                }
+
+                return false;
             }
         });
     }
@@ -47,15 +57,6 @@ class Bullet {
     float deltaX;
     float deltaY;
     PImage image;
-    int damage = 10;
-    
-    Bullet(float x, float y, float deltaX, float deltaY, PImage image) {
-        this.x = x;
-        this.y = y;
-        this.deltaX = deltaX;
-        this.deltaY = deltaY;
-        this.image = image;
-    }
   
     void step() {
         x += deltaX / frameRate;
@@ -69,5 +70,32 @@ class Bullet {
     boolean offScreen() {
         return x < -image.width  || x > width  + image.width ||
                y < -image.height || y > height + image.height;
+    }
+}
+
+class PlayerBullet extends Bullet {
+    final float SPEED = 900;
+
+    PlayerBullet() {
+        this.x = player.x;
+        this.y = player.y;
+        this.deltaY = -SPEED;
+        this.image = resources.playerBullet;
+    }
+}
+
+class GargoyleBullet extends Bullet {
+    final float SPEED = 150;
+
+    GargoyleBullet(float x, float y) {
+        this.x = x;
+        this.y = y;
+        this.image = resources.gargoyleBullet;
+
+        this.deltaX = (player.x - x);
+        this.deltaY = (player.y - y);
+        float length = mag(this.deltaX, this.deltaY);
+        this.deltaX *= SPEED / length;
+        this.deltaY *= SPEED / length;
     }
 }
