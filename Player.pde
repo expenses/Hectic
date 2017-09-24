@@ -1,5 +1,5 @@
 class Player {
-    final float SPEED = 200;
+    final float SPEED = 300;
     final float COOLDOWN = 0.075;
     final float HITBOX_WIDTH = 10;
     final float HITBOX_HEIGHT = 10;

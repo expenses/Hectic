@@ -5,14 +5,14 @@ Stage stageOne() {
     Stage stage = new Stage();
     stage.background = resources.nightSky;
 
-    stage.add(2.5, new Gargoyle(new FiringMove(0.5, 5, 100)));
-    stage.add(2.5, new Gargoyle(new FiringMove(0.25, 5, 100)));
-    stage.add(2.5, new Gargoyle(new FiringMove(0.75, 5, 100)));
+    //stage.add(2.5, new Gargoyle(new FiringMove(0.5, 5, 100)));
+    //stage.add(2.5, new Gargoyle(new FiringMove(0.25, 5, 100)));
+    //stage.add(2.5, new Gargoyle(new FiringMove(0.75, 5, 100)));
 
-    //for (float s = 5.0; s < 100; s += 0.05) {
-        //stage.add(s, new Bat(new Circular(50, random(1000, 3000))));
-        //stage.add(s, new Bat(new FiringMove(random(0, width), 2.5, random(100, 200))));
-    //}
+    for (float s = 1.0; s < 10; s += 0.25) {
+        //stage.add(s, new Gargoyle(new FiringMove(random(0, 1), 3, 100)));
+        stage.add(s, new Bat(new VerticalCurve(100, 300)));
+    }
 
     return stage;
 }

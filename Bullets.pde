@@ -74,7 +74,7 @@ class Bullet {
 }
 
 class PlayerBullet extends Bullet {
-    final float SPEED = 900;
+    final float SPEED = 1000;
 
     PlayerBullet() {
         this.x = player.x;

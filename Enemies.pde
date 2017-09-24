@@ -81,7 +81,7 @@ class Bat extends Enemy {
 }
 
 class Gargoyle extends Enemy {
-    final float COOLDOWN = 1;
+    final float COOLDOWN = 2;
 
     Gargoyle(Movement movement) {
         this.movement = movement;
@@ -89,6 +89,7 @@ class Gargoyle extends Enemy {
         this.health = 40;
         this.hitboxWidth = 45;
         this.hitboxHeight = 20;
+        this.cooldown = COOLDOWN;
     }
 
     void step() {
