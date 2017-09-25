@@ -41,7 +41,8 @@ class Player {
         invulnerableTime -= dt;
 
         if (keys.fire && cooldown < 0) {
-            playerBullets.add(new PlayerBullet());
+            playerBullets.add(new PlayerBullet(-5));
+            playerBullets.add(new PlayerBullet(5));
             cooldown = COOLDOWN;
         }
     }

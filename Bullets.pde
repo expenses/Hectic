@@ -76,8 +76,8 @@ class Bullet {
 class PlayerBullet extends Bullet {
     final float SPEED = 1000;
 
-    PlayerBullet() {
-        this.x = player.x;
+    PlayerBullet(float x) {
+        this.x = player.x + x;
         this.y = player.y;
         this.deltaY = -SPEED;
         this.image = resources.playerBullet;

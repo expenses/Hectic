@@ -17,11 +17,8 @@ Stage stage;
 
 // Processing doesn't support the `->` keyword so you have to use predicate classes for stuff :^\
 import java.util.function.Predicate;
-// I like arraydeques
-import java.util.ArrayDeque;
 
-
-final boolean DEBUG = true;
+final boolean DEBUG = false;
 boolean paused = false;
 
 void setup() {
