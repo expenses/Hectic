@@ -7,6 +7,38 @@ abstract class Movement {
     abstract void step();
 }
 
+// Move into the screen, stay there for a duration and then move out again
+class FiringMove extends Movement {
+    final float START_Y = -50;
+    float yEnd;
+    float duration;
+
+    FiringMove(float screenPercentage, float duration, float yEnd) {
+        this.x = width * screenPercentage;
+        this.y = START_Y;
+        this.yEnd = yEnd;
+        this.duration = duration;
+    }
+
+    void step() {
+        float distance = SPEED / frameRate;
+
+        if (time == 0.0 && y < yEnd) {
+            y += distance;
+        } else if (time < duration) {
+            time += deltaTime;
+        } else {
+            y -= distance;
+        }
+    }
+}
+
+class TargetPlayer extends Movement {
+    PVector target = null;
+
+    void step(){}
+}
+
 class Circular extends Movement {
     final float OFFSET = 20;
 
@@ -28,52 +60,27 @@ class Circular extends Movement {
     }
 }
 
-// Move into the screen, stay there for a duration and then move out again
-class FiringMove extends Movement {
-    final float START_Y = -50;
-    float yEnd;
-    float duration;
-
-    FiringMove(float screenPercentage, float duration, float yEnd) {
-        this.x = width * screenPercentage;
-        this.y = START_Y;
-        this.yEnd = yEnd;
-        this.duration = duration;
-    }
-
-    void step() {
-        float distance = SPEED / frameRate;
-
-        if (time == 0.0 && y < yEnd) {
-            y += distance;
-        } else if (time < duration) {
-            time += 1.0 / frameRate;
-        } else {
-            y -= distance;
-        }
-    }
-}
-
 // Enter the screen from left/right at one y position, and exit the other side at a different y position
 class HorizontalCurve extends Movement {
     final float FORCE = 1500;
+    final float OFFSET = 20;
 
     Spline spline;
 
     HorizontalCurve(float yStart, float yEnd, boolean leftToRight) {
         if (leftToRight) {
             spline = new Spline(
-                new PVector(-FORCE, yStart),
-                new PVector(0, yStart),
-                new PVector(width, yEnd),
-                new PVector(width + FORCE, yEnd)
+                new PVector(-FORCE - OFFSET, yStart),
+                new PVector(-OFFSET, yStart),
+                new PVector(width + OFFSET, yEnd),
+                new PVector(width + FORCE + OFFSET, yEnd)
             );
         } else {
             spline = new Spline(
-                new PVector(width + FORCE, yStart),
-                new PVector(width, yStart),
-                new PVector(0, yEnd),
-                new PVector(-FORCE, yEnd)
+                new PVector(width + FORCE + OFFSET, yStart),
+                new PVector(width + OFFSET, yStart),
+                new PVector(-OFFSET, yEnd),
+                new PVector(-FORCE - OFFSET, yEnd)
             );
         }
     }
@@ -86,11 +93,14 @@ class HorizontalCurve extends Movement {
 }
 
 class VerticalCurve extends Movement {
-    final float FORCE = 5000;
+    final float FORCE = 2000;
 
     Spline spline;
 
     VerticalCurve(float xStart, float xEnd) {
+        xStart *= width;
+        xEnd *= width;
+
         spline = new Spline(
             new PVector(xStart, -FORCE),
             new PVector(xStart, 0),

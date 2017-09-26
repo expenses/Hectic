@@ -1,5 +1,5 @@
-class Player {
-    final float SPEED = 300;
+class Player extends Corners {
+    final float SPEED = 250;
     final float COOLDOWN = 0.075;
     final float HITBOX_WIDTH = 10;
     final float HITBOX_HEIGHT = 10;
@@ -7,8 +7,10 @@ class Player {
     float x = width  * 0.5;
     float y = height * 0.75;
     float cooldown = 0;
-    int lives = 3;
     float invulnerableTime = 0;
+
+    int lives = 3;
+    int pickups = 0;
 
     void damage() {
         if (invulnerableTime < 0) {
@@ -30,19 +32,17 @@ class Player {
     void step() {
         float speed = (keys.slow ? SPEED / 2.0 : SPEED) / frameRate;
 
-        if (keys.up) y -= speed;
-        if (keys.down) y += speed;
-        if (keys.left) x -= speed;
-        if (keys.right) x += speed;
+        if (keys.up && top() > 0) y -= speed;
+        if (keys.down && bottom() < height) y += speed;
+        if (keys.left && left() > 0) x -= speed;
+        if (keys.right && right() < width) x += speed;
 
-        float dt = 1.0 / frameRate;
-
-        cooldown -= dt;
-        invulnerableTime -= dt;
+        cooldown -= deltaTime;
+        invulnerableTime -= deltaTime;
 
         if (keys.fire && cooldown < 0) {
-            playerBullets.add(new PlayerBullet(-5));
-            playerBullets.add(new PlayerBullet(5));
+            playerBullets.add(new PlayerBullet(-5, -5));
+            playerBullets.add(new PlayerBullet(+5, -5));
             cooldown = COOLDOWN;
         }
     }
@@ -61,16 +61,5 @@ class Player {
 
     float bottom() {
         return y + HITBOX_HEIGHT / 2.0;
-    }
-
-    boolean touching(float x, float y) {
-        return x >= left() && x <= right() && y >= top()  && y <= bottom();
-    }
-
-    boolean touchingEnemy(Enemy enemy) {
-        return !(
-            enemy.left() > right() || enemy.right() < left() ||
-            enemy.top() > bottom() || enemy.bottom() < top()
-        );
     }
 }

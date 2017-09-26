@@ -5,6 +5,7 @@ Player player;
 Keys keys;
 Enemies enemies;
 Effects effects;
+Pickups pickups;
 Stage stage;
 
 // Layout:
@@ -20,6 +21,7 @@ import java.util.function.Predicate;
 
 final boolean DEBUG = false;
 boolean paused = false;
+float deltaTime = 0;
 
 void setup() {
     // Set the size and renderer to P2D (uses OpenGL)
@@ -44,12 +46,15 @@ void setup() {
     playerBullets = new Bullets();
     enemyBullets = new Bullets();
     effects = new Effects();
+    pickups = new Pickups();
     stage = stageOne();
 }
 
 void update() {
+    deltaTime = 1.0 / frameRate;
     stage.step();
     player.step();
+    pickups.step();
     playerBullets.stepCollideEnemies();
     enemyBullets.stepCollidePlayer();
     enemies.step();
@@ -65,6 +70,7 @@ void draw() {
     stage.draw();
     playerBullets.draw();
     player.draw();
+    pickups.draw();
     enemyBullets.draw();
     enemies.draw();
     effects.draw();

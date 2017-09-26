@@ -14,21 +14,7 @@ class Bullets {
     void stepCollideEnemies() {
         array.removeIf(new Predicate<Bullet>() {
             public boolean test(Bullet bullet) {
-                bullet.step();
-
-                if (bullet.offScreen()) {
-                    return true;
-                } else {
-                    for (Enemy enemy: enemies.array) {
-                        if (enemy.touching(bullet.x, bullet.y)) {
-                            effects.add(new Effect(resources.explosion, bullet.x, bullet.y));
-                            enemy.health -= PLAYER_BULLET_DAMAGE; 
-                            return true;
-                        }
-                    }
-                }
-
-                return false;
+                return bullet.stepCollideEnemies();
             }
         });
     }
@@ -36,16 +22,7 @@ class Bullets {
     void stepCollidePlayer() {
         array.removeIf(new Predicate<Bullet>() {
             public boolean test(Bullet bullet) {
-                bullet.step();
-                
-                if (bullet.offScreen()) {
-                    return true;
-                } else if (player.touching(bullet.x, bullet.y)) {
-                    player.damage();
-                    return true;
-                }
-
-                return false;
+                return bullet.stepCollidePlayer();
             }
         });
     }
@@ -57,10 +34,42 @@ class Bullet {
     float deltaX;
     float deltaY;
     PImage image;
+
+    float speed;
   
-    void step() {
+    boolean step() {
         x += deltaX / frameRate;
         y += deltaY / frameRate;
+        return offScreen();
+    }
+
+    boolean stepCollideEnemies() {
+        if (step()) return true;
+
+        for (Enemy enemy: enemies.array) {
+            if (enemy.touching(x, y)) {
+                damage(enemy);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    boolean stepCollidePlayer() {
+        if (step()) return true;
+
+        if (player.touching(x, y)) {
+            player.damage();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    void damage(Enemy enemy) {
+        effects.add(new Effect(resources.explosion, x, y));
+        enemy.health -= PLAYER_BULLET_DAMAGE; 
     }
   
     void draw() {
@@ -74,28 +83,18 @@ class Bullet {
 }
 
 class PlayerBullet extends Bullet {
-    final float SPEED = 1000;
-
-    PlayerBullet(float x) {
+    PlayerBullet(float x, float y) {
+        this.speed = 1000;
         this.x = player.x + x;
-        this.y = player.y;
-        this.deltaY = -SPEED;
+        this.y = player.y + y;
+        this.deltaY = -this.speed;
         this.image = resources.playerBullet;
     }
 }
 
 class GargoyleBullet extends Bullet {
-    final float SPEED = 150;
-
-    GargoyleBullet(float x, float y) {
-        this.x = x;
-        this.y = y;
-        this.image = resources.gargoyleBullet;
-
-        this.deltaX = (player.x - x);
-        this.deltaY = (player.y - y);
-        float length = mag(this.deltaX, this.deltaY);
-        this.deltaX *= SPEED / length;
-        this.deltaY *= SPEED / length;
+    GargoyleBullet() {
+        image = resources.gargoyleBullet;
+        speed = 150;
     }
 }

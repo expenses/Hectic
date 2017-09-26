@@ -14,6 +14,9 @@ void drawUI() {
     image(resources.portrait, 5, height / 2.0 - 26.0);
     text(player.lives, 25, height / 2.0 - 13.0);
 
+    image(resources.orb, 40, height / 2.0 - 20.0);
+    text(player.pickups, 50, height / 2.0 - 13.0);
+
     if (DEBUG) {
         text(String.format("FPS: %.1f", frameRate), 5, 10);
         text("Enemies: " + enemies.array.size(), 5, 20);

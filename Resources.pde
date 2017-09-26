@@ -12,11 +12,11 @@ class Resources {
     PImage gargoyle       = loadImage(images + "gargoyle.png");
     PImage gargoyleBullet = loadImage(images + "gargoyleBullet.png");
     
-    PImage nightSky = loadImage(images + "nightSky.png");
-    PImage clouds   = loadImage(images + "clouds.png");
-    PImage hallway  = loadImage(images + "hallway.png");
+    PImage nightSky  = loadImage(images + "nightSky.png");
+    PImage clouds    = loadImage(images + "clouds.png");
 
     PImage explosion = loadImage(images + "explosion.png");
+    PImage orb       = loadImage(images + "orb.png");
     
     // Load the font
     PFont tinyUnicode = createFont(fonts + "TinyUnicode.ttf", 16, false);

@@ -4,8 +4,7 @@ class Enemies {
     void step() {
         array.removeIf(new Predicate<Enemy>() {
             public boolean test(Enemy enemy) {
-                enemy.step();
-                return enemy.offScreen() || enemy.dead();
+                return enemy.step();
             }
         });
     }
@@ -19,7 +18,7 @@ class Enemies {
     }
 }
 
-class Enemy {
+abstract class Enemy extends Corners {
     final float EDGE_PADDING = 100;
 
     PImage image;
@@ -30,13 +29,26 @@ class Enemy {
     float hitboxWidth;
     float hitboxHeight;
 
-    void step() {
+    boolean step() {
         movement.step();
-        if (player.touchingEnemy(this)) player.damage();
+
+        if (offScreen()) return true;
+
+        if (dead()) {
+            die();
+            return true;
+        }
+
+        if (this.touchingRect(player)) player.damage();
+        return false;
     }
 
     boolean dead() {
         return health <= 0;
+    }
+
+    void die() {
+        if (random(1.0) > 0.9) pickups.add(new Pickup(movement.x, movement.y));
     }
 
     void draw() {
@@ -65,28 +77,33 @@ class Enemy {
                movement.y < -EDGE_PADDING || movement.y > height + EDGE_PADDING;
     }
 
-    boolean touching(float x, float y) {
-        return x >= left() && x <= right() && y >= top() && y <= bottom();
-    }
+    abstract Bullet newBullet();
 }
 
 class Bat extends Enemy {
     Bat(Movement movement) {
         this.movement = movement;
         this.image = resources.bat;
-        this.health = 20;
+        this.health = 30;
         this.hitboxWidth = 25;
         this.hitboxHeight = 20;
+    }
+
+    Bullet newBullet() {
+        return null;
     }
 }
 
 class Gargoyle extends Enemy {
     final float COOLDOWN = 2;
 
-    Gargoyle(Movement movement) {
+    FiringPattern firing;
+
+    Gargoyle(Movement movement, FiringPattern firing) {
         this.movement = movement;
+        this.firing = firing;
         this.image = resources.gargoyle;
-        this.health = 40;
+        this.health = 50;
         this.hitboxWidth = 45;
         this.hitboxHeight = 20;
         this.cooldown = COOLDOWN;
@@ -94,11 +111,15 @@ class Gargoyle extends Enemy {
 
     void step() {
         movement.step();
-        cooldown -= 1.0 / frameRate;
+        cooldown -= deltaTime;
 
         if (cooldown < 0) {
-            enemyBullets.add(new GargoyleBullet(movement.x, movement.y));
+            firing.fire(this);
             cooldown = COOLDOWN;
         }   
+    }
+
+    Bullet newBullet() {
+        return new GargoyleBullet();
     }
 }

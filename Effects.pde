@@ -6,7 +6,7 @@ class Effects {
     }
 
     void draw() {
-        for (Effect effect: array) drawImage(effect.image, effect.x, effect.y);
+        for (Effect effect: array) effect.draw();
     }
 
     void step() {
@@ -30,8 +30,12 @@ class Effect {
         this.y = y;
     }
 
+    void draw() {
+        drawImage(image, x, y);
+    }
+
     boolean step() {
-        time -= 1 / frameRate;
+        time -= deltaTime;
         return time < 0;
     }
 }
