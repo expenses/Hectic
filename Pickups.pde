@@ -18,7 +18,7 @@ class Pickups {
     }
 }
 
-class Pickup extends Corners {
+class Pickup extends Rect {
     final float HITBOX_SIZE = 30;
 
     float x;
@@ -65,4 +65,3 @@ class Pickup extends Corners {
         return y > height;
     }
 }
-

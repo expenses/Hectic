@@ -11,6 +11,11 @@ class Resources {
     PImage bat            = loadImage(images + "bat.png");
     PImage gargoyle       = loadImage(images + "gargoyle.png");
     PImage gargoyleBullet = loadImage(images + "gargoyleBullet.png");
+
+    PImage bossHealthBar = loadImage(images + "bossHealthBar.png");
+
+    PImage bossOne       = loadImage(images + "bossOne.png");
+    PImage bossOneBullet = loadImage(images + "bossOneBullet.png");
     
     PImage nightSky  = loadImage(images + "nightSky.png");
     PImage clouds    = loadImage(images + "clouds.png");

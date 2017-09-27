@@ -8,6 +8,8 @@ Effects effects;
 Pickups pickups;
 Stage stage;
 
+Boss boss = null;
+
 // Layout:
 // Resources: handles resource (image and font) loading
 // Keys: keeps track of pressed keys, handles key presses and releases
@@ -19,7 +21,7 @@ Stage stage;
 // Processing doesn't support the `->` keyword so you have to use predicate classes for stuff :^\
 import java.util.function.Predicate;
 
-final boolean DEBUG = false;
+final boolean DEBUG = true;
 boolean paused = false;
 float deltaTime = 0;
 

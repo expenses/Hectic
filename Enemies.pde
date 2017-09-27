@@ -4,7 +4,8 @@ class Enemies {
     void step() {
         array.removeIf(new Predicate<Enemy>() {
             public boolean test(Enemy enemy) {
-                return enemy.step();
+                enemy.step();
+                return enemy.remove();
             }
         });
     }
@@ -18,7 +19,7 @@ class Enemies {
     }
 }
 
-abstract class Enemy extends Corners {
+abstract class Enemy extends Rect {
     final float EDGE_PADDING = 100;
 
     PImage image;
@@ -29,22 +30,18 @@ abstract class Enemy extends Corners {
     float hitboxWidth;
     float hitboxHeight;
 
-    boolean step() {
+    void step() {
         movement.step();
+        if (this.touchingRect(player)) player.damage();
+    }
 
-        if (offScreen()) return true;
-
-        if (dead()) {
+    boolean remove() {
+        if (health <= 0) {
             die();
             return true;
         }
 
-        if (this.touchingRect(player)) player.damage();
-        return false;
-    }
-
-    boolean dead() {
-        return health <= 0;
+        return offScreen();
     }
 
     void die() {

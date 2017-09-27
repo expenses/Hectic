@@ -20,6 +20,7 @@ class AtPlayer implements FiringPattern {
 
 class Circle implements FiringPattern {
     int sides;
+    float initialRotation = 0;
 
     Circle(int sides) {
         this.sides = sides;
@@ -31,7 +32,7 @@ class Circle implements FiringPattern {
             bullet.x = firing.movement.x;
             bullet.y = firing.movement.y;
 
-            float rotation = ((float) side / (float) sides) * TWO_PI;
+            float rotation = ((float) side / (float) sides) * TWO_PI + initialRotation;
             bullet.deltaX = cos(rotation) * bullet.speed;
             bullet.deltaY = sin(rotation) * bullet.speed;
 

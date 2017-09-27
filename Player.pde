@@ -1,4 +1,4 @@
-class Player extends Corners {
+class Player extends Rect {
     final float SPEED = 250;
     final float COOLDOWN = 0.075;
     final float HITBOX_WIDTH = 10;
