@@ -1,4 +1,5 @@
 final float SCALE = 2;
+final float HALF_SCALE = SCALE / 2.0;
 
 // Draw an image at the right scale
 void drawScale(PImage image, float x, float y) {
@@ -11,21 +12,26 @@ void drawImage(PImage image, float x, float y) {
 }
 
 void drawUI() {
-    scale(SCALE);
-    // Draw the player's lives
-    image(resources.portrait, 5, height / 2.0 - 26.0);
-    text(player.lives, 25, height / 2.0 - 13.0);
-    // Draw the player's orbs
-    image(resources.orb, 40, height / 2.0 - 20.0);
-    text(player.pickups, 50, height / 2.0 - 13.0);
+    // Draw the player's lives and orbs
+    drawScale(resources.portrait, 10, height - resources.portrait.height * HALF_SCALE - 30);
+    text(player.lives, 50, height - 25);
+    //drawScale(resources.orb, 70, height - resources.orb.height * HALF_SCALE - 30);
+    //text(player.orbs, 100, height - 25);
 
+    float orbBarX = 70;
+    float orbBarY = height - 35;
+    float maxWidth = width / 4.0;
+
+    image(resources.orbBarBackground, orbBarX, orbBarY, maxWidth, 10);
+    image(resources.orbBar, orbBarX, orbBarY, map(player.orbs, 0, player.orbMax, 0, maxWidth), 10);
+
+    // Draw the boss healthbar
     if (boss != null) {
-        image(resources.bossHealthBar, 5, 5, map(boss.health, 0, boss.maxHealth, 0, width/2.0 - 10), 5);
+        image(resources.bossHealthBar, 10, 10, map(boss.health, 0, boss.maxHealth, 0, width - 20), 10);
     }
 
     // Draw debug info
     if (DEBUG) {
-        text(String.format("FPS: %.1f", frameRate), 5, 10);
-        text("Enemies: " + enemies.array.size(), 5, 20);
+        text(String.format("FPS: %.1f", frameRate), width - 80, height - 5);
     }
 }

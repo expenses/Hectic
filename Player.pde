@@ -3,6 +3,7 @@ class Player extends Rect {
     final float COOLDOWN = 0.075;
     final float HITBOX_WIDTH = 10;
     final float HITBOX_HEIGHT = 10;
+    final int orbMax = 10;
 
     float x = width  * 0.5;
     float y = height * 0.75;
@@ -10,13 +11,17 @@ class Player extends Rect {
     float invulnerableTime = 0;
 
     int lives = 3;
-    int pickups = 0;
+    int orbs = 0;
 
     void damage() {
         if (invulnerableTime < 0) {
             invulnerableTime = 5;
             lives--;
         }
+    }
+
+    void collectOrb() {
+        if (orbs < orbMax) orbs++;
     }
 
     void draw() {

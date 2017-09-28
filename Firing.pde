@@ -3,27 +3,44 @@ interface FiringPattern {
 }
 
 class AtPlayer implements FiringPattern {
+    int total;
+    float spread;
+
+    AtPlayer(int total, float spread) {
+        this.total = total;
+        this.spread = spread;
+    }
+
     void fire(Enemy firing) {
-        Bullet bullet = firing.newBullet();
-        bullet.x = firing.movement.x;
-        bullet.y = firing.movement.y;
+        for (int i = 0; i < total; i++) {
+            float rotationDifference = spread * ((total % 2 == 0 ? (total - 1) / 2.0: total / 2) - i) / total;
 
-        bullet.deltaX = (player.x - bullet.x);
-        bullet.deltaY = (player.y - bullet.y);
-        float length = mag(bullet.deltaX, bullet.deltaY);
-        bullet.deltaX *= bullet.speed / length;
-        bullet.deltaY *= bullet.speed / length;
+            Bullet bullet = firing.newBullet();
+            bullet.x = firing.movement.x;
+            bullet.y = firing.movement.y;
 
-        enemyBullets.add(bullet);
+            float rotation = atan2(player.y - bullet.y, player.x - bullet.x) + rotationDifference;
+
+            bullet.deltaX = cos(rotation);
+            bullet.deltaY = sin(rotation);
+            float length = mag(bullet.deltaX, bullet.deltaY);
+            bullet.deltaX *= bullet.speed / length;
+            bullet.deltaY *= bullet.speed / length;
+
+            enemyBullets.add(bullet);
+        }
     }
 }
 
 class Circle implements FiringPattern {
     int sides;
     float initialRotation = 0;
+    float rotationPerFire = 0;
 
-    Circle(int sides) {
+    Circle(int sides, float initialRotation, float rotationPerFire) {
         this.sides = sides;
+        this.initialRotation = initialRotation;
+        this.rotationPerFire = rotationPerFire;
     }
 
     void fire(Enemy firing) {
@@ -38,5 +55,7 @@ class Circle implements FiringPattern {
 
             enemyBullets.add(bullet);
         }
+
+        initialRotation += rotationPerFire;
     }
 }

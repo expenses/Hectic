@@ -8,7 +8,7 @@ Stage stageOne() {
     stage.background = resources.nightSky;
 
 
-    /*for (float s = 1; s < 6; s += 0.5) {
+    for (float s = 1; s < 6; s += 0.5) {
         stage.add(s, new Bat(new HorizontalCurve(100, 300, true)));
         stage.add(s, new Bat(new HorizontalCurve(150, 350, true)));
     }
@@ -25,15 +25,15 @@ Stage stageOne() {
     }
 
     for (float s = 15; s < 20; s += 0.5) {
-        stage.add(s, new Bat(new HorizontalCurve(500, 600, true)));
+        stage.add(s, new Bat(new HorizontalCurve(400, 600, true)));
     }
     
     // Add a triplet of gargoyles
-    stage.add(25, new Gargoyle(new FiringMove(0.50, 5, 100), new Circle(8)));
-    stage.add(25, new Gargoyle(new FiringMove(0.25, 5, 100), new Circle(8)));
-    stage.add(25, new Gargoyle(new FiringMove(0.75, 5, 100), new Circle(8)));*/
+    stage.add(25, new Gargoyle(new FiringMove(0.50, 5, 100), new AtPlayer(90, 1)));
+    stage.add(25, new Gargoyle(new FiringMove(0.25, 5, 100), new AtPlayer(90, 1)));
+    stage.add(25, new Gargoyle(new FiringMove(0.75, 5, 100), new AtPlayer(90, 1)));
 
-    stage.add(3.5, new BossOne());
+    stage.add(35, new BossOne());
 
     return stage;
 }
@@ -69,6 +69,10 @@ class Stage {
         resetMatrix();
 
         if (!paused) cloudY = (cloudY + CLOUD_DELTA / frameRate) % cloudHeight;
+    }
+
+    void finish() {
+        exit();
     }
 }
 

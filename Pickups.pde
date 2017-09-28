@@ -58,7 +58,7 @@ class Pickup extends Rect {
         y += velocity / frameRate;
 
         if (player.touchingRect(this)) {
-            player.pickups ++;
+            player.collectOrb();
             return true;
         }
 

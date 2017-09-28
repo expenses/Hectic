@@ -8,6 +8,9 @@ class Resources {
     PImage playerBullet       = loadImage(images + "playerBullet.png");
     PImage portrait           = loadImage(images + "portrait.png");
 
+    PImage orbBar = loadImage(images + "orbBar.png");
+    PImage orbBarBackground = loadImage(images + "orbBarBackground.png");
+
     PImage bat            = loadImage(images + "bat.png");
     PImage gargoyle       = loadImage(images + "gargoyle.png");
     PImage gargoyleBullet = loadImage(images + "gargoyleBullet.png");
@@ -24,7 +27,7 @@ class Resources {
     PImage orb       = loadImage(images + "orb.png");
     
     // Load the font
-    PFont tinyUnicode = createFont(fonts + "TinyUnicode.ttf", 16, false);
+    PFont tinyUnicode = createFont(fonts + "TinyUnicode.ttf", 32, false);
     
     Resources() {
         // Set the font
