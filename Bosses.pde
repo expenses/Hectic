@@ -1,8 +1,14 @@
-// A move that a boss performs. Firing patterns have an associated cooldown
+// Boss enemies!
+
+// A move that a boss performs.
 class BossMove {
+    // The list of firing patterns
     FiringPattern[] patterns;
+    // The movement of the boss towards the specified position
     MoveTowards movement;
+    // How long the move lasts
     float duration;
+    // What the time is at
     float time = 0;
 
     BossMove(float x, float y, float duration, FiringPattern... patterns) {
@@ -14,11 +20,13 @@ class BossMove {
     void step(Boss boss) {
         time += deltaTime;
 
+        // If the boss isn't at the position, move it
         if (boss.x != movement.x || boss.y != movement.y) {
             movement.step(boss);
             return;
         }
 
+        // Otherwise fire all the patterns
         for(FiringPattern pattern: patterns) pattern.fire(boss);
     }
 
@@ -28,15 +36,17 @@ class BossMove {
 
     void reset() {
         time = 0;
+        // Reset the patterns
         for (FiringPattern pattern: patterns) pattern.reset();
     }
 }
 
-abstract class Boss extends Enemy {
+abstract class Boss extends FiringEnemy {
     int maxHealth;
     int move = 0;
     BossMove[] moves;
 
+    // Finish the stage if the boss is killed
     void die() {
         boss = null;
         stage.finish();
@@ -46,10 +56,13 @@ abstract class Boss extends Enemy {
         // Set the global boss reference
         boss = this;
 
+        // Get the move
         BossMove bossMove = moves[move];
 
+        // Step the move
         bossMove.step(this);
 
+        // If the move is finished, switch to the next one
         if (bossMove.finished()) {
             bossMove.reset();
             move = (move + 1) % moves.length;
@@ -89,10 +102,12 @@ class BossOneBullet extends EnemyBullet {
     BossOneBullet(float speed) {
         this.image = resources.bossOneBullet;
         this.speed = speed;
+        // Give the bullet a random orange colour
         this.colour = color(255, 128 + random(-1, 1) * 40, 0);
     }
 
     void draw() {
+        // Draw the coloured bullet
         tint(colour);
         super.draw();
         noTint();

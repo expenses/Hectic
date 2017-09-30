@@ -1,7 +1,13 @@
+// The player!
 class Player extends Hitboxed {
     final float SPEED = 250;
     final float COOLDOWN = 0.075;
     final int orbMax = 35;
+
+    float cooldown = 0;
+    float invulnerableTime = 0;
+    int lives = 3;
+    int orbs = 0;
 
     Player() {
         x = WIDTH  * 0.5;
@@ -10,24 +16,26 @@ class Player extends Hitboxed {
         hitboxHeight = 10;
     }
 
-    float cooldown = 0;
-    float invulnerableTime = 0;
-
-    int lives = 3;
-    int orbs = 0;
-
     void damage() {
         if (invulnerableTime < 0) {
-            invulnerableTime = 5;
+            // Return to the main menu if the player is dead
+            if (lives == 0) {
+                mainMenu.active = true;
+                return;
+            }
+
             lives--;
+            invulnerableTime = 5;
         }
     }
 
+    // Collect an orb if it's not already at the max
     void collectOrb(int value) {
-        if (orbs < orbMax) orbs = min(orbMax, orbs + value);
+        orbs = min(orbMax, orbs + value);
     }
 
     void draw() {
+        // If the unit is invulnerable use that image (flash if the invulnerable time is low)
         if (invulnerableTime > 0 && (invulnerableTime > 1 || invulnerableTime % 0.2 > 0.1)) {
             image = resources.playerInvulnerable;
         } else {
@@ -49,6 +57,7 @@ class Player extends Hitboxed {
         invulnerableTime -= deltaTime;
 
         if (keys.fire && cooldown < 0) {
+            // Spawn 5 bullets
             bullets.add(new PlayerBullet(-0.2));
             bullets.add(new PlayerBullet(-0.1));
             bullets.add(new PlayerBullet(0));
@@ -57,6 +66,7 @@ class Player extends Hitboxed {
             cooldown = COOLDOWN;
         }
 
+        // Use a bomb if the orbs at at the max, doing a lot of damage to each enemy
         if (keys.bomb && orbs == orbMax) {
             orbs = 0;
             for (Enemy enemy: enemies.array) enemy.damage(1000);

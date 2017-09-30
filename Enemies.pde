@@ -1,12 +1,13 @@
-abstract class Enemy extends Hitboxed {
-    final float EDGE_PADDING = 100;
+// Game enemies
 
+abstract class Enemy extends Hitboxed {
     Movement movement;
-    float cooldown = 0;
     int health;
 
     boolean step() {
+        // Move the enemy
         movement.step(this);
+        // If it's touching the player, damage the player
         if (this.touching(player)) player.damage();
 
         return remove();
@@ -37,14 +38,28 @@ abstract class Enemy extends Hitboxed {
         }
     }
 
+    // Is the enmy offscreen? (Adds a bit of padding so that enemies can spawn offscreen)
     boolean offScreen() {
-        return x < -EDGE_PADDING || x > width  + EDGE_PADDING ||
-               y < -EDGE_PADDING || y > height + EDGE_PADDING;
+        return x < -image.width  - 50 || x > WIDTH  + image.width  + 50 ||
+               y < -image.height - 50 || y > HEIGHT + image.height + 50;
     }
-
-    abstract Bullet newBullet();
 }
 
+// An enemy that fires
+abstract class FiringEnemy extends Enemy {
+    FiringPattern firing;
+
+    // The bullet that the enemy fires
+    abstract Bullet newBullet();
+
+    boolean step() {
+        super.step();
+        firing.fire(this);
+        return remove();
+    }
+}
+
+// A bat enemy
 class Bat extends Enemy {
     Bat(Movement movement) {
         this.movement = movement;
@@ -53,15 +68,10 @@ class Bat extends Enemy {
         this.hitboxWidth = 25;
         this.hitboxHeight = 20;
     }
-
-    Bullet newBullet() {
-        return null;
-    }
 }
 
-class Gargoyle extends Enemy {
-    FiringPattern firing;
-
+// A gargoyle enemy that fires
+class Gargoyle extends FiringEnemy {
     Gargoyle(Movement movement, FiringPattern firing) {
         this.movement = movement;
         this.firing = firing;
@@ -69,12 +79,6 @@ class Gargoyle extends Enemy {
         this.health = 150;
         this.hitboxWidth = 45;
         this.hitboxHeight = 20;
-    }
-
-    boolean step() {
-        super.step();
-        firing.fire(this);
-        return remove();
     }
 
     Bullet newBullet() {

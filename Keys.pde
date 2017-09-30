@@ -1,8 +1,11 @@
+// Keys and key handling
+
 // See http://docs.oracle.com/javase/6/docs/api/constant-values.html#java.awt.event.KeyEvent
 final int P_KEY = 80;
 final int X_KEY = 88;
 final int Z_KEY = 90;
 
+// Holds which keys are being pressed
 class Keys {
     boolean up = false;
     boolean down = false;
@@ -14,6 +17,23 @@ class Keys {
 }
 
 public void keyPressed() {
+    // Set the `key` variable to prevent it propagating in case it is `ESC` (which causes processing to quit)
+    key = 0;
+
+    // If either of the menus are active, get them to handle the key instead of the game
+
+    if (mainMenu.active) {
+        mainMenu.handleKey();
+        return;
+    }
+
+    if (pausedMenu.active) {
+        pausedMenu.handleKey();
+        return;
+    }
+
+    // Turn keys on
+
     switch (keyCode) {
         case UP:
             keys.up = true;
@@ -36,13 +56,15 @@ public void keyPressed() {
         case SHIFT:
             keys.slow = true;
             break;
+        case ESC:
         case P_KEY:
-            paused = !paused;
+            pausedMenu.active = true;
             break;
     }
 }
 
 public void keyReleased() {
+    // Turn keys off
     switch (keyCode) {
         case UP:
             keys.up = false;

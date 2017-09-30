@@ -1,5 +1,8 @@
+// Bullets in the game
+
 final int PLAYER_BULLET_DAMAGE = 10;
 
+// A bullet in the game
 class Bullet extends Entity {
     float deltaX;
     float deltaY;
@@ -13,11 +16,12 @@ class Bullet extends Entity {
     }
 
     boolean offScreen() {
-        return x < -image.width  || x > width  + image.width ||
-               y < -image.height || y > height + image.height;
+        return x < -image.width  || x > WIDTH  + image.width ||
+               y < -image.height || y > HEIGHT + image.height;
     }
 }
 
+// The bullets that the player fires
 class PlayerBullet extends Bullet {
     PlayerBullet(float rotation) {
         this.speed = 1000;
@@ -28,6 +32,7 @@ class PlayerBullet extends Bullet {
         this.image = resources.playerBullet;
     }
 
+    // Bullets stop if they collide with enemies
     boolean step() {
         if (super.step()) return true;
 
@@ -43,6 +48,7 @@ class PlayerBullet extends Bullet {
 }
 
 class EnemyBullet extends Bullet {
+    // Enemy bullets stop if they collide with the player
     boolean step() {
         if (super.step()) return true;
 
@@ -55,6 +61,7 @@ class EnemyBullet extends Bullet {
     }
 }
 
+// The bullets that gargoyles fire
 class GargoyleBullet extends EnemyBullet {
     GargoyleBullet() {
         image = resources.gargoyleBullet;

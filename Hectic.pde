@@ -1,3 +1,4 @@
+// Create a bunch of stuff
 Resources resources;
 Player player  = new Player();
 Keys keys = new Keys();
@@ -5,28 +6,22 @@ EntityList<Enemy> enemies = new EntityList<Enemy>();
 EntityList bullets = new EntityList();
 EntityList effects = new EntityList();
 EntityList pickups = new EntityList();
-Stage stage;
-
 Boss boss = null;
-
-// Layout:
-// Resources: handles resource (image and font) loading
-// Keys: keeps track of pressed keys, handles key presses and releases
-// Drawing: contains drawing functions
-// Player: player character movement and firing
-// Enemies: enemy classes
-// Bullets: bullet classes
+Stage stage;
+PausedMenu pausedMenu;
+MainMenu mainMenu;
 
 // Processing doesn't support the `->` keyword so you have to use predicate classes for stuff :^\
 import java.util.function.Predicate;
 
-final int WIDTH = 480;
-final int HEIGHT = 640;
-final float SCALE = 2;
-final float HALF_SCALE = SCALE / 2.0;
+// Final variables. Turn `DEBUG` on and off to see debug info and hitboxes
+final int     WIDTH      = 480;
+final int     HEIGHT     = 640;
+final float   SCALE      = 2;
+final float   HALF_SCALE = SCALE / 2.0;
+final boolean DEBUG      = false;
 
-final boolean DEBUG = false;
-boolean paused = false;
+// How much time has passed since the last frame
 float deltaTime = 0;
 
 void settings() {
@@ -47,12 +42,17 @@ void setup() {
 
     // Load the resources
     resources = new Resources();
+    // Set up the menus
+    mainMenu = new MainMenu();
+    pausedMenu = new PausedMenu();
     // Set up the stage
-    stage  = stageOne();
+    stage = stageOne();
 }
 
 void update() {
+    // Set delta time
     deltaTime = 1.0 / frameRate;
+    // Step all the stuff
     stage.step();
     player.step();
     pickups.step();
@@ -62,9 +62,17 @@ void update() {
 }
 
 void draw() {
+    // Draw a background
     background(0);
 
-    if (!paused) update();
+    // If the main menu is active draw it and do nothing else
+    if (mainMenu.active) {
+        mainMenu.draw();
+        return;
+    }
+
+    // If the game isn't paused, update it
+    if (!pausedMenu.active) update();
 
     // Draw the main items
     stage.draw();
@@ -73,6 +81,14 @@ void draw() {
     bullets.draw();
     enemies.draw();
     effects.draw();
-    
+
+    // Draw the user interface
     drawUI();
+
+    if (pausedMenu.active) {
+        // Draw a transparent overlay
+        image(resources.pauseOverlay, 0, 0, WIDTH, HEIGHT);
+        // And the pause menu
+        pausedMenu.draw();
+    }
 }

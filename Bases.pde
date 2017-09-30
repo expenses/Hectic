@@ -1,4 +1,6 @@
-// An entity in the game world.
+// Base abstract classes for the game
+
+// An basic entity in the game world.
 abstract class Entity {
     float x;
     float y;
@@ -8,6 +10,7 @@ abstract class Entity {
         drawImage(image, x, y);
     }
 
+    // Move the entity and return whether it should be removed
     abstract boolean step();
 }
 
@@ -42,13 +45,16 @@ abstract class Hitboxed extends Entity {
     }
 }
 
+// A list of entities.
 class EntityList<E extends Entity> {
     ArrayList<E> array = new ArrayList<E>();
 
+    // Add an entity
     void add(E entity) {
         array.add(entity);
     }
 
+    // Step the entities and remove the unused ones using a predicate
     void step() {
         array.removeIf(new Predicate<E>() {
             public boolean test(E entity) {
@@ -57,6 +63,7 @@ class EntityList<E extends Entity> {
         });
     }
 
+    // Draw all the entities
     void draw() {
         for (E entity: array) entity.draw();
     }

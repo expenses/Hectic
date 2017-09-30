@@ -1,7 +1,9 @@
+// A movement that an enemy takes
 abstract class Movement {
     float time = 0;
     final float SPEED = 150;
 
+    // Step the enemy
     abstract void step(Enemy enemy);
 }
 
@@ -36,6 +38,7 @@ class FiringMove extends Movement {
     }
 }
 
+// Move towards a position on the screen
 class MoveTowards extends Movement {
     float x;
     float y;
@@ -51,28 +54,26 @@ class MoveTowards extends Movement {
         float distance = mag(x - enemy.x, y - enemy.y);
         float travel = speed / frameRate;
 
+        // If the distance is less than how fast the enemy moves a frame, set it to the end
         if (distance < travel) {
             enemy.x = x;
             enemy.y = y;
         } else {
+            // Otherwise move the enemy
             enemy.x += ((x - enemy.x) / distance) * travel;
             enemy.y += ((y - enemy.y) / distance) * travel;
         }
     }
 }
 
-class TargetPlayer extends Movement {
-    PVector target = null;
-
-    void step(Enemy enemy){}
-}
-
+// Travel in a circular curve
 class Circular extends Movement {
     final float OFFSET = 20;
 
     Spline spline;
 
     Circular(float yStart, float force) {
+        // Create a new spline
         spline = new Spline(
             new PVector(-OFFSET, yStart - force),
             new PVector(-OFFSET, yStart),
@@ -82,6 +83,7 @@ class Circular extends Movement {
     }
 
     void step(Enemy enemy) {
+        // Step the spline and set the enemy position
         spline.step(SPEED / frameRate);
         enemy.x = spline.point.x;
         enemy.y = spline.point.y;
@@ -96,6 +98,7 @@ class HorizontalCurve extends Movement {
     Spline spline;
 
     HorizontalCurve(float yStart, float yEnd, boolean leftToRight) {
+        // Use a different spline depending on whether it's going left-to-right or not
         if (leftToRight) {
             spline = new Spline(
                 new PVector(-FORCE - OFFSET, yStart),
@@ -114,18 +117,21 @@ class HorizontalCurve extends Movement {
     }
 
     void step(Enemy enemy) {
+        // Step the spline and set the enemy position
         spline.step(SPEED / frameRate);
         enemy.x = spline.point.x;
         enemy.y = spline.point.y;
     }
 }
 
+// Enter the screen at the top at one x position and exit at the bottom at a different y position
 class VerticalCurve extends Movement {
     final float FORCE = 2000;
 
     Spline spline;
 
     VerticalCurve(float xStart, float xEnd) {
+        // Scale both starting positions by the width so percentages are used
         xStart *= WIDTH;
         xEnd *= WIDTH;
 
@@ -138,6 +144,7 @@ class VerticalCurve extends Movement {
     }
 
     void step(Enemy enemy) {
+        // Step the spline and set the enemy position
         spline.step(SPEED / frameRate);
         enemy.x = spline.point.x;
         enemy.y = spline.point.y;
@@ -151,6 +158,7 @@ class DiagonalCurve extends Movement {
     Spline spline;
 
     DiagonalCurve(float startX, float endY, boolean leftToRight) {
+        // Use a different spline depending on whether it's going left-to-right or not
         if (leftToRight) {
             spline = new Spline(
                 new PVector(startX, -FORCE),
@@ -169,17 +177,19 @@ class DiagonalCurve extends Movement {
     }
 
     void step(Enemy enemy) {
+        // Step the spline and set the enemy position
         spline.step(SPEED / frameRate);
         enemy.x = spline.point.x;
         enemy.y = spline.point.y;
     }
 }
 
-// Enter the screen from one side and then leave it through the same side
+// Enter the screen from one side (left or right) and then leave it through the same side
 class SideCurve extends Movement {
     Spline spline;
 
     SideCurve(float yStart, float yEnd, float force, boolean leftToRight) {
+        // Use a different spline depending on whether it's going left-to-right or not
         if (leftToRight) {
             spline = new Spline(
                 new PVector(-force, yStart),
@@ -198,12 +208,14 @@ class SideCurve extends Movement {
     }
 
     void step(Enemy enemy) {
+        // Step the spline and set the enemy position
         spline.step(SPEED / frameRate);
         enemy.x = spline.point.x;
         enemy.y = spline.point.y;
     }
 }
 
+// A spline curve class
 class Spline {
     // The maximum increase to a t value to check.
     // Lowering this will make stepping faster but increases the chance that a point cant be found
@@ -234,21 +246,25 @@ class Spline {
         return new PVector(curvePoint(a.x, b.x, c.x, d.x, t), curvePoint(a.y, b.y, c.y, d.y, t));
     }
     
-    // Use binary search to find an appropriate t value so that the distance between the points ensures a constant speed
-    // This works pretty well, but only for simple curves. 
+    // Use binary search to find an appropriate t value so that the distance between the points ensures a CONSTANT SPEED
+    // This works pretty well, but only for simple curves (? It might work for more complex curves too, idk). 
     void step(float distance) {
+        // Get the min and max t values to check
         float minT = t;
         float maxT = t + MAX_INCREASE;
         
         while (true) {
+            // Test a t value
             float testT = (minT + maxT) / 2.0;
             PVector testPoint = interpolate(testT);
             float testDist = testPoint.dist(point);
-                        
+
+            // If it's precise enough, set it and return
             if (abs(testDist - distance) < PRECISION) {
                 t = testT;
                 point = testPoint;
                 return;
+            // Else change the min/max values
             } else if (testDist < distance) {
                 minT = testT;
             } else {
