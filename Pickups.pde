@@ -1,67 +1,25 @@
-class Pickups {
-    ArrayList<Pickup> array = new ArrayList<Pickup>();
-
-    void add(Pickup pickup) {
-        array.add(pickup);
-    }
-
-    void draw() {
-        for (Pickup pickup: array) pickup.draw();
-    }
-
-    void step() {
-        array.removeIf(new Predicate<Pickup>() {
-            public boolean test(Pickup pickup) {
-                return pickup.step();
-            }
-        });
-    }
-}
-
-class Pickup extends Rect {
-    final float HITBOX_SIZE = 30;
-
-    float x;
-    float y;
+class Pickup extends Hitboxed {
     float velocity = 0;
-    PImage image;
+    int value;
 
-    Pickup(float x, float y) {
+    Pickup(float x, float y, int value) {
         this.x = x;
         this.y = y;
-        this.image = resources.orb;
-    }
-
-    float left() {
-        return x - HITBOX_SIZE / 2.0;
-    }
-
-    float right() {
-        return x + HITBOX_SIZE / 2.0;
-    }
-
-    float top() {
-        return y - HITBOX_SIZE / 2.0;
-    }
-
-    float bottom() {
-        return y + HITBOX_SIZE / 2.0;
-    }
-
-    void draw() {
-        drawImage(image, x, y);
-        if (DEBUG) rect(x, y, HITBOX_SIZE, HITBOX_SIZE);
+        this.value = value;
+        this.image = value >= 5 ? resources.bigOrb : resources.orb;
+        this.hitboxWidth = 30;
+        this.hitboxHeight = 30;
     }
 
     boolean step() {
         velocity += 75 / frameRate;
         y += velocity / frameRate;
 
-        if (player.touchingRect(this)) {
-            player.collectOrb();
+        if (player.touching(this)) {
+            player.collectOrb(value);
             return true;
         }
 
-        return y > height;
+        return y > HEIGHT;
     }
 }

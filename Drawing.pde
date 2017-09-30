@@ -1,5 +1,6 @@
-final float SCALE = 2;
-final float HALF_SCALE = SCALE / 2.0;
+final float ORB_BAR_X = 70;
+final float ORB_BAR_Y = HEIGHT - 35;
+final float ORB_BAR_MAX_WIDTH = WIDTH / 4.0;
 
 // Draw an image at the right scale
 void drawScale(PImage image, float x, float y) {
@@ -13,25 +14,19 @@ void drawImage(PImage image, float x, float y) {
 
 void drawUI() {
     // Draw the player's lives and orbs
-    drawScale(resources.portrait, 10, height - resources.portrait.height * HALF_SCALE - 30);
-    text(player.lives, 50, height - 25);
-    //drawScale(resources.orb, 70, height - resources.orb.height * HALF_SCALE - 30);
-    //text(player.orbs, 100, height - 25);
+    drawImage(resources.portrait, 30, HEIGHT - 30);
+    text(player.lives, 50, HEIGHT - 25);
 
-    float orbBarX = 70;
-    float orbBarY = height - 35;
-    float maxWidth = width / 4.0;
-
-    image(resources.orbBarBackground, orbBarX, orbBarY, maxWidth, 10);
-    image(resources.orbBar, orbBarX, orbBarY, map(player.orbs, 0, player.orbMax, 0, maxWidth), 10);
+    image(resources.orbBarBackground, ORB_BAR_X, ORB_BAR_Y, ORB_BAR_MAX_WIDTH, 10);
+    image(resources.orbBar, ORB_BAR_X, ORB_BAR_Y, map(player.orbs, 0, player.orbMax, 0, ORB_BAR_MAX_WIDTH), 10);
 
     // Draw the boss healthbar
     if (boss != null) {
-        image(resources.bossHealthBar, 10, 10, map(boss.health, 0, boss.maxHealth, 0, width - 20), 10);
+        image(resources.bossHealthBar, 10, 10, map(boss.health, 0, boss.maxHealth, 0, WIDTH - 20), 10);
     }
 
     // Draw debug info
     if (DEBUG) {
-        text(String.format("FPS: %.1f", frameRate), width - 80, height - 5);
+        text(String.format("FPS: %.1f", frameRate), WIDTH - 80, HEIGHT - 5);
     }
 }

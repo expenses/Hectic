@@ -1,27 +1,38 @@
+// A move that a boss performs. Firing patterns have an associated cooldown
 class BossMove {
-    FiringPattern pattern;
-    float cooldown;
-    float cooldownTime;
+    FiringPattern[] patterns;
+    MoveTowards movement;
+    float duration;
+    float time = 0;
 
-    BossMove(FiringPattern pattern, float cooldown) {
-        this.pattern = pattern;
-        this.cooldown = cooldown;
-        this.cooldownTime = cooldown;
+    BossMove(float x, float y, float duration, FiringPattern... patterns) {
+        this.patterns = patterns;
+        this.movement = new MoveTowards(x, y, 200);
+        this.duration = duration;
     }
 
     void step(Boss boss) {
-        cooldownTime -= deltaTime;
+        time += deltaTime;
 
-        if (cooldownTime < 0) {
-            pattern.fire(boss);
-            cooldownTime = cooldown;
+        if (boss.x != movement.x || boss.y != movement.y) {
+            movement.step(boss);
+            return;
         }
+
+        for(FiringPattern pattern: patterns) pattern.fire(boss);
+    }
+
+    boolean finished() {
+        return time > duration;
+    }
+
+    void reset() {
+        time = 0;
+        for (FiringPattern pattern: patterns) pattern.reset();
     }
 }
 
 abstract class Boss extends Enemy {
-    final float SWITCH_TIME = 7.5;
-    float time = 0;
     int maxHealth;
     int move = 0;
     BossMove[] moves;
@@ -31,29 +42,33 @@ abstract class Boss extends Enemy {
         stage.finish();
     }
 
-    void step() {
+    boolean step() {
         // Set the global boss reference
         boss = this;
 
-        movement.step();
-        time += deltaTime;
+        BossMove bossMove = moves[move];
 
-        moves[move].step(this);
+        bossMove.step(this);
 
-        if (time > SWITCH_TIME) {
-            time = time % SWITCH_TIME;
+        if (bossMove.finished()) {
+            bossMove.reset();
             move = (move + 1) % moves.length;
         }
+
+        return remove();
     }
 }
 
 class BossOne extends Boss {
     BossOne() {
-        this.movement = new FiringMove(0.5, 300, 100);
+        this.x = WIDTH / 2.0;
+        this.y = -50;
 
         this.moves = new BossMove[]{
-            new BossMove(new AtPlayer(3, 1), 0.75),
-            new BossMove(new Circle(6, 0, 0.2), 0.1),
+            new BossMove(100, 100, 4, new Arc(0, 2, 20, 0.05), new Arc(2, -2, 20, 0.05)),
+            new BossMove(150, 150, 6, new AtPlayer(3, 1, 0.75), new Circle(4, 0.5, 0.1)),
+            new BossMove(WIDTH / 2.0, 100, 6, new Circle(6, 0.2, 0.1)),
+            new BossMove(400, 200, 2, new AtPlayer(5, 0.5, 0.25)),
         };
 
         this.image = resources.bossOne;
@@ -64,13 +79,22 @@ class BossOne extends Boss {
     }
 
     Bullet newBullet() {
-        return new BossOneBullet();
+        return new BossOneBullet(200);
     }
 }
 
-class BossOneBullet extends Bullet {
-    BossOneBullet() {
-        image = resources.bossOneBullet;
-        speed = 200;
+class BossOneBullet extends EnemyBullet {
+    color colour;
+
+    BossOneBullet(float speed) {
+        this.image = resources.bossOneBullet;
+        this.speed = speed;
+        this.colour = color(255, 128 + random(-1, 1) * 40, 0);
+    }
+
+    void draw() {
+        tint(colour);
+        super.draw();
+        noTint();
     }
 }

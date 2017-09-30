@@ -1,5 +1,6 @@
 // See http://docs.oracle.com/javase/6/docs/api/constant-values.html#java.awt.event.KeyEvent
 final int P_KEY = 80;
+final int X_KEY = 88;
 final int Z_KEY = 90;
 
 class Keys {
@@ -8,6 +9,7 @@ class Keys {
     boolean left = false;
     boolean right = false;
     boolean fire = false;
+    boolean bomb = false;
     boolean slow = false;
 }
 
@@ -27,6 +29,9 @@ public void keyPressed() {
             break;
         case Z_KEY:
             keys.fire = true;
+            break;
+        case X_KEY:
+            keys.bomb = true;
             break;
         case SHIFT:
             keys.slow = true;
@@ -50,6 +55,9 @@ public void keyReleased() {
             break;
         case RIGHT:
             keys.right = false;
+            break;
+        case X_KEY:
+            keys.bomb = false;
             break;
         case Z_KEY:
             keys.fire = false;

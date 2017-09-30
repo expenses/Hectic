@@ -1,39 +1,8 @@
 final int PLAYER_BULLET_DAMAGE = 10;
 
-class Bullets {
-    ArrayList<Bullet> array = new ArrayList<Bullet>();
-
-    void add(Bullet bullet) {
-        array.add(bullet);
-    }
-
-    void draw() {
-        for (Bullet bullet: array) bullet.draw();
-    }
-
-    void stepCollideEnemies() {
-        array.removeIf(new Predicate<Bullet>() {
-            public boolean test(Bullet bullet) {
-                return bullet.stepCollideEnemies();
-            }
-        });
-    }
-
-    void stepCollidePlayer() {
-        array.removeIf(new Predicate<Bullet>() {
-            public boolean test(Bullet bullet) {
-                return bullet.stepCollidePlayer();
-            }
-        });
-    }
-}
-
-class Bullet {
-    float x;
-    float y;
+class Bullet extends Entity {
     float deltaX;
     float deltaY;
-    PImage image;
 
     float speed;
   
@@ -43,21 +12,39 @@ class Bullet {
         return offScreen();
     }
 
-    boolean stepCollideEnemies() {
-        if (step()) return true;
+    boolean offScreen() {
+        return x < -image.width  || x > width  + image.width ||
+               y < -image.height || y > height + image.height;
+    }
+}
+
+class PlayerBullet extends Bullet {
+    PlayerBullet(float rotation) {
+        this.speed = 1000;
+        this.x = player.x;
+        this.y = player.y;
+        this.deltaX = cos(rotation - HALF_PI) * this.speed;
+        this.deltaY = sin(rotation - HALF_PI) * this.speed;
+        this.image = resources.playerBullet;
+    }
+
+    boolean step() {
+        if (super.step()) return true;
 
         for (Enemy enemy: enemies.array) {
             if (enemy.touching(x, y)) {
-                damage(enemy);
+                enemy.damage(x, y, PLAYER_BULLET_DAMAGE);
                 return true;
             }
         }
 
         return false;
     }
+}
 
-    boolean stepCollidePlayer() {
-        if (step()) return true;
+class EnemyBullet extends Bullet {
+    boolean step() {
+        if (super.step()) return true;
 
         if (player.touching(x, y)) {
             player.damage();
@@ -66,33 +53,9 @@ class Bullet {
             return false;
         }
     }
-
-    void damage(Enemy enemy) {
-        effects.add(new Effect(resources.explosion, x, y));
-        enemy.health -= PLAYER_BULLET_DAMAGE; 
-    }
-  
-    void draw() {
-        drawImage(image, x, y);
-    }
-
-    boolean offScreen() {
-        return x < -image.width  || x > width  + image.width ||
-               y < -image.height || y > height + image.height;
-    }
 }
 
-class PlayerBullet extends Bullet {
-    PlayerBullet(float x, float y) {
-        this.speed = 1000;
-        this.x = player.x + x;
-        this.y = player.y + y;
-        this.deltaY = -this.speed;
-        this.image = resources.playerBullet;
-    }
-}
-
-class GargoyleBullet extends Bullet {
+class GargoyleBullet extends EnemyBullet {
     GargoyleBullet() {
         image = resources.gargoyleBullet;
         speed = 150;

@@ -1,11 +1,10 @@
-Bullets playerBullets;
-Bullets enemyBullets;
 Resources resources;
-Player player;
-Keys keys;
-Enemies enemies;
-Effects effects;
-Pickups pickups;
+Player player  = new Player();
+Keys keys = new Keys();
+EntityList<Enemy> enemies = new EntityList<Enemy>();
+EntityList bullets = new EntityList();
+EntityList effects = new EntityList();
+EntityList pickups = new EntityList();
 Stage stage;
 
 Boss boss = null;
@@ -21,13 +20,21 @@ Boss boss = null;
 // Processing doesn't support the `->` keyword so you have to use predicate classes for stuff :^\
 import java.util.function.Predicate;
 
-final boolean DEBUG = true;
+final int WIDTH = 480;
+final int HEIGHT = 640;
+final float SCALE = 2;
+final float HALF_SCALE = SCALE / 2.0;
+
+final boolean DEBUG = false;
 boolean paused = false;
 float deltaTime = 0;
 
-void setup() {
+void settings() {
     // Set the size and renderer to P2D (uses OpenGL)
-    size(480, 640, P2D);
+    size(WIDTH, HEIGHT, P2D); 
+}
+
+void setup() {
     // Set the texture sampling to mode 2 (Nearest Neighbour)
     ((PGraphicsOpenGL) g).textureSampling(2);
     // Set the framerate
@@ -40,16 +47,8 @@ void setup() {
 
     // Load the resources
     resources = new Resources();
-
-    // Set up the classes
-    player = new Player();
-    keys = new Keys();
-    enemies = new Enemies();
-    playerBullets = new Bullets();
-    enemyBullets = new Bullets();
-    effects = new Effects();
-    pickups = new Pickups();
-    stage = stageOne();
+    // Set up the stage
+    stage  = stageOne();
 }
 
 void update() {
@@ -57,8 +56,7 @@ void update() {
     stage.step();
     player.step();
     pickups.step();
-    playerBullets.stepCollideEnemies();
-    enemyBullets.stepCollidePlayer();
+    bullets.step();
     enemies.step();
     effects.step();
 }
@@ -70,10 +68,9 @@ void draw() {
 
     // Draw the main items
     stage.draw();
-    playerBullets.draw();
     player.draw();
     pickups.draw();
-    enemyBullets.draw();
+    bullets.draw();
     enemies.draw();
     effects.draw();
     

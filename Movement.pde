@@ -1,10 +1,8 @@
 abstract class Movement {
-    float x;
-    float y;
     float time = 0;
     final float SPEED = 150;
 
-    abstract void step();
+    abstract void step(Enemy enemy);
 }
 
 // Move into the screen, stay there for a duration and then move out again
@@ -12,15 +10,17 @@ class FiringMove extends Movement {
     final float START_Y = -50;
     float yEnd;
     float duration;
+    float x;
+    float y;
 
     FiringMove(float screenPercentage, float duration, float yEnd) {
-        this.x = width * screenPercentage;
+        this.x = WIDTH * screenPercentage;
         this.y = START_Y;
         this.yEnd = yEnd;
         this.duration = duration;
     }
 
-    void step() {
+    void step(Enemy enemy) {
         float distance = SPEED / frameRate;
 
         if (time == 0.0 && y < yEnd) {
@@ -30,13 +30,41 @@ class FiringMove extends Movement {
         } else {
             y -= distance;
         }
+
+        enemy.x = x;
+        enemy.y = y;
+    }
+}
+
+class MoveTowards extends Movement {
+    float x;
+    float y;
+    float speed;
+
+    MoveTowards(float x, float y, float speed) {
+        this.x = x;
+        this.y = y;
+        this.speed = speed;
+    }
+
+    void step(Enemy enemy) {
+        float distance = mag(x - enemy.x, y - enemy.y);
+        float travel = speed / frameRate;
+
+        if (distance < travel) {
+            enemy.x = x;
+            enemy.y = y;
+        } else {
+            enemy.x += ((x - enemy.x) / distance) * travel;
+            enemy.y += ((y - enemy.y) / distance) * travel;
+        }
     }
 }
 
 class TargetPlayer extends Movement {
     PVector target = null;
 
-    void step(){}
+    void step(Enemy enemy){}
 }
 
 class Circular extends Movement {
@@ -48,15 +76,15 @@ class Circular extends Movement {
         spline = new Spline(
             new PVector(-OFFSET, yStart - force),
             new PVector(-OFFSET, yStart),
-            new PVector(width + OFFSET, yStart),
-            new PVector(width + OFFSET, yStart - force)
+            new PVector(WIDTH + OFFSET, yStart),
+            new PVector(WIDTH + OFFSET, yStart - force)
         );
     }
 
-    void step() {
+    void step(Enemy enemy) {
         spline.step(SPEED / frameRate);
-        x = spline.point.x;
-        y = spline.point.y;
+        enemy.x = spline.point.x;
+        enemy.y = spline.point.y;
     }
 }
 
@@ -72,23 +100,23 @@ class HorizontalCurve extends Movement {
             spline = new Spline(
                 new PVector(-FORCE - OFFSET, yStart),
                 new PVector(-OFFSET, yStart),
-                new PVector(width + OFFSET, yEnd),
-                new PVector(width + FORCE + OFFSET, yEnd)
+                new PVector(WIDTH + OFFSET, yEnd),
+                new PVector(WIDTH + FORCE + OFFSET, yEnd)
             );
         } else {
             spline = new Spline(
-                new PVector(width + FORCE + OFFSET, yStart),
-                new PVector(width + OFFSET, yStart),
+                new PVector(WIDTH + FORCE + OFFSET, yStart),
+                new PVector(WIDTH + OFFSET, yStart),
                 new PVector(-OFFSET, yEnd),
                 new PVector(-FORCE - OFFSET, yEnd)
             );
         }
     }
 
-    void step() {
+    void step(Enemy enemy) {
         spline.step(SPEED / frameRate);
-        x = spline.point.x;
-        y = spline.point.y;
+        enemy.x = spline.point.x;
+        enemy.y = spline.point.y;
     }
 }
 
@@ -98,21 +126,21 @@ class VerticalCurve extends Movement {
     Spline spline;
 
     VerticalCurve(float xStart, float xEnd) {
-        xStart *= width;
-        xEnd *= width;
+        xStart *= WIDTH;
+        xEnd *= WIDTH;
 
         spline = new Spline(
             new PVector(xStart, -FORCE),
             new PVector(xStart, 0),
-            new PVector(xEnd, width),
-            new PVector(xEnd, width + FORCE)
+            new PVector(xEnd, WIDTH),
+            new PVector(xEnd, WIDTH + FORCE)
         );
     }
 
-    void step() {
+    void step(Enemy enemy) {
         spline.step(SPEED / frameRate);
-        x = spline.point.x;
-        y = spline.point.y;
+        enemy.x = spline.point.x;
+        enemy.y = spline.point.y;
     }
 }
 
@@ -127,8 +155,8 @@ class DiagonalCurve extends Movement {
             spline = new Spline(
                 new PVector(startX, -FORCE),
                 new PVector(startX, 0),
-                new PVector(width, endY),
-                new PVector(width + FORCE, endY)
+                new PVector(WIDTH, endY),
+                new PVector(WIDTH + FORCE, endY)
             );
         } else {
             spline = new Spline(
@@ -140,10 +168,10 @@ class DiagonalCurve extends Movement {
         }
     }
 
-    void step() {
+    void step(Enemy enemy) {
         spline.step(SPEED / frameRate);
-        x = spline.point.x;
-        y = spline.point.y;
+        enemy.x = spline.point.x;
+        enemy.y = spline.point.y;
     }
 }
 
@@ -161,18 +189,18 @@ class SideCurve extends Movement {
             );
         } else {
             spline = new Spline(
-                new PVector(width + force, yStart),
-                new PVector(width, yStart),
-                new PVector(width, yEnd),
-                new PVector(width + force, yEnd)
+                new PVector(WIDTH + force, yStart),
+                new PVector(WIDTH, yStart),
+                new PVector(WIDTH, yEnd),
+                new PVector(WIDTH + force, yEnd)
             );
         }
     }
 
-    void step() {
+    void step(Enemy enemy) {
         spline.step(SPEED / frameRate);
-        x = spline.point.x;
-        y = spline.point.y;
+        enemy.x = spline.point.x;
+        enemy.y = spline.point.y;
     }
 }
 

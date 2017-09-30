@@ -6,3 +6,6 @@ run:
 
 build:
 	$(processing) --output=out --force --build
+
+export:
+	$(processing) --platform=linux --output=linux --export --force

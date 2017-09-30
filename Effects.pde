@@ -1,41 +1,23 @@
-class Effects {
-    ArrayList<Effect> array = new ArrayList<Effect>();
+abstract class Effect extends Entity {
+    final float TOTAL_TIME = 0.5;
+    float time = TOTAL_TIME;
 
-    void add(Effect effect) {
-        array.add(effect);
-    }
-
-    void draw() {
-        for (Effect effect: array) effect.draw();
-    }
-
-    void step() {
-        array.removeIf(new Predicate<Effect>() {
-            public boolean test(Effect effect) {
-                return effect.step();
-            }
-        });
+    boolean step() {
+        time -= deltaTime;
+        return time < 0;
     }
 }
 
-class Effect {
-    PImage image;
-    float x;
-    float y;
-    float time = 0.1;
-
-    Effect(PImage image, float x, float y) {
-        this.image = image;
+class Explosion extends Effect {
+    Explosion(float x, float y) {
         this.x = x;
         this.y = y;
     }
 
     void draw() {
-        drawImage(image, x, y);
-    }
+        int index = (int) map(time, TOTAL_TIME, 0, 0, resources.explosion.length);
+        image = resources.explosion[index];
 
-    boolean step() {
-        time -= deltaTime;
-        return time < 0;
+        super.draw();
     }
 }

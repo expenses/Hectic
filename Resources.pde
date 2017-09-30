@@ -5,30 +5,38 @@ class Resources {
     // Load images
     PImage player             = loadImage(images + "player.png");
     PImage playerInvulnerable = loadImage(images + "playerInvulnerable.png");
-    PImage playerBullet       = loadImage(images + "playerBullet.png");
-    PImage portrait           = loadImage(images + "portrait.png");
 
-    PImage orbBar = loadImage(images + "orbBar.png");
-    PImage orbBarBackground = loadImage(images + "orbBarBackground.png");
+    PImage portrait         = loadImage(images + "ui/portrait.png");
+    PImage orbBar           = loadImage(images + "ui/orbBar.png");
+    PImage orbBarBackground = loadImage(images + "ui/orbBarBackground.png");
+    PImage bossHealthBar    = loadImage(images + "ui/bossHealthBar.png");
 
-    PImage bat            = loadImage(images + "bat.png");
-    PImage gargoyle       = loadImage(images + "gargoyle.png");
-    PImage gargoyleBullet = loadImage(images + "gargoyleBullet.png");
+    PImage bat      = loadImage(images + "enemies/bat.png");
+    PImage gargoyle = loadImage(images + "enemies/gargoyle.png");
+    PImage bossOne  = loadImage(images + "enemies/bossOne.png");
 
-    PImage bossHealthBar = loadImage(images + "bossHealthBar.png");
+    PImage playerBullet   = loadImage(images + "bullets/playerBullet.png");
+    PImage gargoyleBullet = loadImage(images + "bullets/gargoyleBullet.png");
+    PImage bossOneBullet  = loadImage(images + "bullets/bossOneBullet.png");
 
-    PImage bossOne       = loadImage(images + "bossOne.png");
-    PImage bossOneBullet = loadImage(images + "bossOneBullet.png");
-    
-    PImage nightSky  = loadImage(images + "nightSky.png");
-    PImage clouds    = loadImage(images + "clouds.png");
+    PImage nightSky = loadImage(images + "backgrounds/nightSky.png");
+    PImage clouds   = loadImage(images + "backgrounds/clouds.png");
 
-    PImage explosion = loadImage(images + "explosion.png");
-    PImage orb       = loadImage(images + "orb.png");
-    
+    PImage[] explosion = new PImage[]{
+        loadImage(images + "explosion/1.png"),
+        loadImage(images + "explosion/2.png"),
+        loadImage(images + "explosion/3.png"),
+        loadImage(images + "explosion/4.png"),
+        loadImage(images + "explosion/5.png"),
+        loadImage(images + "explosion/6.png")
+    };
+
+    PImage orb    = loadImage(images + "orb.png");
+    PImage bigOrb = loadImage(images + "bigOrb.png");
+
     // Load the font
     PFont tinyUnicode = createFont(fonts + "TinyUnicode.ttf", 32, false);
-    
+
     Resources() {
         // Set the font
         textFont(tinyUnicode);

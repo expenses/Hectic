@@ -1,12 +1,15 @@
-class Player extends Rect {
+class Player extends Hitboxed {
     final float SPEED = 250;
     final float COOLDOWN = 0.075;
-    final float HITBOX_WIDTH = 10;
-    final float HITBOX_HEIGHT = 10;
-    final int orbMax = 10;
+    final int orbMax = 35;
 
-    float x = width  * 0.5;
-    float y = height * 0.75;
+    Player() {
+        x = WIDTH  * 0.5;
+        y = HEIGHT * 0.75;
+        hitboxWidth = 10;
+        hitboxHeight = 10;
+    }
+
     float cooldown = 0;
     float invulnerableTime = 0;
 
@@ -20,51 +23,45 @@ class Player extends Rect {
         }
     }
 
-    void collectOrb() {
-        if (orbs < orbMax) orbs++;
+    void collectOrb(int value) {
+        if (orbs < orbMax) orbs = min(orbMax, orbs + value);
     }
 
     void draw() {
         if (invulnerableTime > 0 && (invulnerableTime > 1 || invulnerableTime % 0.2 > 0.1)) {
-            drawImage(resources.playerInvulnerable, x, y);
+            image = resources.playerInvulnerable;
         } else {
-            drawImage(resources.player, x, y);
+            image = resources.player;
         }
-        
-        if (DEBUG) rect(x, y, HITBOX_WIDTH, HITBOX_HEIGHT);
+
+        super.draw();
     }
-           
-    void step() {
+
+    boolean step() {
         float speed = (keys.slow ? SPEED / 2.0 : SPEED) / frameRate;
 
         if (keys.up && top() > 0) y -= speed;
-        if (keys.down && bottom() < height) y += speed;
+        if (keys.down && bottom() < HEIGHT) y += speed;
         if (keys.left && left() > 0) x -= speed;
-        if (keys.right && right() < width) x += speed;
+        if (keys.right && right() < WIDTH) x += speed;
 
         cooldown -= deltaTime;
         invulnerableTime -= deltaTime;
 
         if (keys.fire && cooldown < 0) {
-            playerBullets.add(new PlayerBullet(-5, -5));
-            playerBullets.add(new PlayerBullet(+5, -5));
+            bullets.add(new PlayerBullet(-0.2));
+            bullets.add(new PlayerBullet(-0.1));
+            bullets.add(new PlayerBullet(0));
+            bullets.add(new PlayerBullet(0.1));
+            bullets.add(new PlayerBullet(0.2));
             cooldown = COOLDOWN;
         }
-    }
 
-    float left() {
-        return x - HITBOX_WIDTH / 2.0;
-    }
+        if (keys.bomb && orbs == orbMax) {
+            orbs = 0;
+            for (Enemy enemy: enemies.array) enemy.damage(1000);
+        }
 
-    float right() {
-        return x + HITBOX_WIDTH / 2.0;
-    }
-
-    float top() {
-        return y - HITBOX_HEIGHT / 2.0;
-    }
-
-    float bottom() {
-        return y + HITBOX_HEIGHT / 2.0;
+        return true;
     }
 }
