@@ -70,6 +70,14 @@ class Bat extends Enemy {
     }
 }
 
+class HellBat extends Bat {
+    HellBat(Movement movement) {
+        super(movement);
+        this.image = resources.hellBat;
+        this.health = 120;
+    }
+}
+
 // A gargoyle enemy that fires
 class Gargoyle extends FiringEnemy {
     Gargoyle(Movement movement, FiringPattern firing) {

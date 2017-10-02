@@ -20,14 +20,14 @@ public void keyPressed() {
     // Set the `key` variable to prevent it propagating in case it is `ESC` (which causes processing to quit)
     key = 0;
 
-    // If either of the menus are active, get them to handle the key instead of the game
+    // If either of the menus are open, get them to handle the key instead of the game
 
-    if (mainMenu.active) {
+    if (state == State.MainMenu) {
         mainMenu.handleKey();
         return;
     }
 
-    if (pausedMenu.active) {
+    if (state == State.Paused) {
         pausedMenu.handleKey();
         return;
     }
@@ -58,7 +58,7 @@ public void keyPressed() {
             break;
         case ESC:
         case P_KEY:
-            pausedMenu.active = true;
+            state = State.Paused;
             break;
     }
 }

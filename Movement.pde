@@ -66,6 +66,33 @@ class MoveTowards extends Movement {
     }
 }
 
+class TargetPlayer extends Movement {
+    boolean started = false;
+    float x;
+    float y;
+    float deltaX;
+    float deltaY;
+
+    TargetPlayer(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    void step(Enemy enemy) {
+        if (!started) {
+            enemy.x = x;
+            enemy.y = y;
+            float rotation = atan2(player.y - enemy.y, player.x - enemy.x);
+            deltaX = cos(rotation) * SPEED;
+            deltaY = sin(rotation) * SPEED;
+            started = true;
+        }
+
+        enemy.x += deltaX / frameRate;
+        enemy.y += deltaY / frameRate;
+    }
+}
+
 // Travel in a circular curve
 class Circular extends Movement {
     final float OFFSET = 20;

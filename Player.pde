@@ -20,7 +20,7 @@ class Player extends Hitboxed {
         if (invulnerableTime < 0) {
             // Return to the main menu if the player is dead
             if (lives == 0) {
-                mainMenu.active = true;
+                state = State.MainMenu;
                 return;
             }
 
@@ -69,7 +69,8 @@ class Player extends Hitboxed {
         // Use a bomb if the orbs at at the max, doing a lot of damage to each enemy
         if (keys.bomb && orbs == orbMax) {
             orbs = 0;
-            for (Enemy enemy: enemies.array) enemy.damage(1000);
+            // Damage each enemy 10 seperate times (cos it looks cooler than just a single time)
+            for (Enemy enemy: enemies.array) for (int i = 0; i < 10; i++) enemy.damage(50);
         }
 
         return true;

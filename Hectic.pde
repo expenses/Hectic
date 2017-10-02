@@ -10,6 +10,8 @@ Boss boss = null;
 Stage stage;
 PausedMenu pausedMenu;
 MainMenu mainMenu;
+State state = State.MainMenu;
+Submenu submenu = Submenu.MainMenu;
 
 // Processing doesn't support the `->` keyword so you have to use predicate classes for stuff :^\
 import java.util.function.Predicate;
@@ -23,6 +25,21 @@ final boolean DEBUG      = false;
 
 // How much time has passed since the last frame
 float deltaTime = 0;
+
+// What the game is currently doing
+enum State {
+    MainMenu,
+    Paused,
+    Playing
+}
+
+// Which submenu of the main menu the game is in
+enum Submenu {
+    MainMenu,
+    Stages,
+    Controls,
+    Credits
+}
 
 void settings() {
     // Set the size and renderer to P2D (uses OpenGL)
@@ -40,13 +57,14 @@ void setup() {
     stroke(255, 0, 0);
     rectMode(CENTER);
 
+    // Set the colour mode for colouring stuff
+    colorMode(HSB, 360, 100, 100);
+
     // Load the resources
     resources = new Resources();
     // Set up the menus
     mainMenu = new MainMenu();
     pausedMenu = new PausedMenu();
-    // Set up the stage
-    stage = stageOne();
 }
 
 void update() {
@@ -65,14 +83,14 @@ void draw() {
     // Draw a background
     background(0);
 
-    // If the main menu is active draw it and do nothing else
-    if (mainMenu.active) {
+    // If the main menu is open draw that
+    if (state == State.MainMenu) {
         mainMenu.draw();
         return;
     }
 
-    // If the game isn't paused, update it
-    if (!pausedMenu.active) update();
+    // If the game is playing, update it
+    if (state == State.Playing) update();
 
     // Draw the main items
     stage.draw();
@@ -85,10 +103,21 @@ void draw() {
     // Draw the user interface
     drawUI();
 
-    if (pausedMenu.active) {
+    if (state == State.Paused) {
         // Draw a transparent overlay
         image(resources.pauseOverlay, 0, 0, WIDTH, HEIGHT);
         // And the pause menu
         pausedMenu.draw();
     }
+}
+
+// Reset all the game fields
+void reset() {
+    player = new Player();
+    keys = new Keys();
+    enemies = new EntityList<Enemy>();
+    bullets = new EntityList();
+    effects = new EntityList();
+    pickups = new EntityList();
+    boss = null;
 }

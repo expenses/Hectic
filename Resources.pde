@@ -13,12 +13,12 @@ class Resources {
     PImage orbBarBackground = loadImage(images + "ui/orbBarBackground.png");
     PImage bossHealthBar    = loadImage(images + "ui/bossHealthBar.png");
     PImage pauseOverlay     = loadImage(images + "ui/pauseOverlay.png");
-    PImage title            = loadImage(images + "ui/title.png");
-    PImage paused           = loadImage(images + "ui/paused.png");
 
     // Enemies
     PImage bat      = loadImage(images + "enemies/bat.png");
+    PImage hellBat  = loadImage(images + "enemies/hellBat.png");
     PImage gargoyle = loadImage(images + "enemies/gargoyle.png");
+    PImage spectre  = loadImage(images + "enemies/spectre.png");
     PImage bossOne  = loadImage(images + "enemies/bossOne.png");
 
     // Bullets
@@ -27,8 +27,9 @@ class Resources {
     PImage bossOneBullet  = loadImage(images + "bullets/bossOneBullet.png");
 
     // Backgrounds
-    PImage nightSky = loadImage(images + "backgrounds/nightSky.png");
-    PImage clouds   = loadImage(images + "backgrounds/clouds.png");
+    PImage nightSky   = loadImage(images + "backgrounds/nightSky.png");
+    PImage clouds     = loadImage(images + "backgrounds/clouds.png");
+    PImage graveyard  = loadImage(images + "backgrounds/graveyard.png");
 
     // Explosions!
     PImage[] explosion = new PImage[]{
@@ -46,6 +47,7 @@ class Resources {
 
     // Load the font
     PFont tinyUnicode = createFont(fonts + "TinyUnicode.ttf", 32, false);
+    PFont oldeEnglish = createFont(fonts + "OldeEnglish.ttf", 80, false);
 
     Resources() {
         // Set the font

@@ -40,7 +40,20 @@ Stage stageOne() {
         stage.add(s, new Bat(new Circular(200, 1000)));
     }
 
-    stage.add(35, new BossOne());
+    for (float s = 35; s < 45; s += 0.25) {
+        stage.add(s, new HellBat(new TargetPlayer(random(0, WIDTH), -50)));
+    }
+
+    stage.add(50, new BossOne());
+
+    return stage;
+}
+
+Stage stageTwo() {
+    Stage stage = new Stage();
+    stage.background = resources.graveyard;
+    stage.clouds = true;
+
 
     return stage;
 }
@@ -50,6 +63,13 @@ class Stage {
     boolean clouds;
     ArrayList<SpawnTime> spawnTimes = new ArrayList<SpawnTime>();
     float time = 0;
+    float cloudHeight = resources.clouds.height * SCALE - HEIGHT;
+
+    Stage() {
+        state = State.Playing;
+        submenu = Submenu.MainMenu;
+        reset();
+    }
 
     void add(float time, Enemy enemy) {
         spawnTimes.add(new SpawnTime(time, enemy));
@@ -71,25 +91,19 @@ class Stage {
         });
 
         // Move the clouds if they're active
-        if (clouds) {
-            float cloudHeight = resources.clouds.height * SCALE - HEIGHT;
-            cloudY = (cloudY + CLOUD_DELTA / frameRate) % cloudHeight;
-        }
+        if (clouds) cloudY = (cloudY + CLOUD_DELTA / frameRate) % cloudHeight;
     }
 
     void draw() {
         drawScale(background, 0, 0);
-        
+
         // Draw the clouds if they're active
-        if (clouds) {
-            float cloudHeight = resources.clouds.height * SCALE - HEIGHT;
-            drawScale(resources.clouds, 0, cloudY - cloudHeight);
-        }
+        if (clouds) drawScale(resources.clouds, 0, cloudY - cloudHeight);
     }
 
     // Go back to the main menu if the stage is finished
     void finish() {
-        mainMenu.active = true;
+        stage = stageTwo();
     }
 }
 

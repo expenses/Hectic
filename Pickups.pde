@@ -9,8 +9,8 @@ class Pickup extends Hitboxed {
         this.value = value;
         // Use a different image depending on the value
         this.image = value >= 5 ? resources.bigOrb : resources.orb;
-        this.hitboxWidth = 40;
-        this.hitboxHeight = 40;
+        this.hitboxWidth = 50;
+        this.hitboxHeight = 50;
     }
 
     boolean step() {

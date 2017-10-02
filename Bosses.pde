@@ -103,7 +103,7 @@ class BossOneBullet extends EnemyBullet {
         this.image = resources.bossOneBullet;
         this.speed = speed;
         // Give the bullet a random orange colour
-        this.colour = color(255, 128 + random(-1, 1) * 40, 0);
+        this.colour = color(random(15, 45), 100, 100);
     }
 
     void draw() {
