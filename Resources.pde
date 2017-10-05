@@ -25,6 +25,7 @@ class Resources {
     PImage playerBullet   = loadImage(images + "bullets/playerBullet.png");
     PImage gargoyleBullet = loadImage(images + "bullets/gargoyleBullet.png");
     PImage bossOneBullet  = loadImage(images + "bullets/bossOneBullet.png");
+    PImage spectreBullet  = loadImage(images + "bullets/spectreBullet.png");
 
     // Backgrounds
     PImage nightSky   = loadImage(images + "backgrounds/nightSky.png");

@@ -68,3 +68,10 @@ class GargoyleBullet extends EnemyBullet {
         speed = 150;
     }
 }
+
+class SpectreBullet extends EnemyBullet {
+    SpectreBullet() {
+        image = resources.spectreBullet;
+        speed = 200;
+    }
+}

@@ -13,7 +13,7 @@ class BossMove {
 
     BossMove(float x, float y, float duration, FiringPattern... patterns) {
         this.patterns = patterns;
-        this.movement = new MoveTowards(x, y, 200);
+        this.movement = new MoveTowards(x, y);
         this.duration = duration;
     }
 
@@ -74,6 +74,7 @@ abstract class Boss extends FiringEnemy {
 
 class BossOne extends Boss {
     BossOne() {
+        this.speed = 200;
         this.x = WIDTH / 2.0;
         this.y = -50;
 

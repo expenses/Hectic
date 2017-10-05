@@ -54,6 +54,9 @@ Stage stageTwo() {
     stage.background = resources.graveyard;
     stage.clouds = true;
 
+    for (float s = 5; s < 15; s += 0.5) {
+        stage.add(s, new Spectre(new FiringMove(random(0, 1), 15, random(100, 200)), new AtPlayer(3, 0.5, 2)));
+    }
 
     return stage;
 }

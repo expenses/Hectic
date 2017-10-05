@@ -1,7 +1,6 @@
 // A movement that an enemy takes
 abstract class Movement {
     float time = 0;
-    final float SPEED = 150;
 
     // Step the enemy
     abstract void step(Enemy enemy);
@@ -23,7 +22,7 @@ class FiringMove extends Movement {
     }
 
     void step(Enemy enemy) {
-        float distance = SPEED / frameRate;
+        float distance = enemy.speed / frameRate;
 
         if (time == 0.0 && y < yEnd) {
             y += distance;
@@ -42,17 +41,15 @@ class FiringMove extends Movement {
 class MoveTowards extends Movement {
     float x;
     float y;
-    float speed;
 
-    MoveTowards(float x, float y, float speed) {
+    MoveTowards(float x, float y) {
         this.x = x;
         this.y = y;
-        this.speed = speed;
     }
 
     void step(Enemy enemy) {
         float distance = mag(x - enemy.x, y - enemy.y);
-        float travel = speed / frameRate;
+        float travel = enemy.speed / frameRate;
 
         // If the distance is less than how fast the enemy moves a frame, set it to the end
         if (distance < travel) {
@@ -83,8 +80,8 @@ class TargetPlayer extends Movement {
             enemy.x = x;
             enemy.y = y;
             float rotation = atan2(player.y - enemy.y, player.x - enemy.x);
-            deltaX = cos(rotation) * SPEED;
-            deltaY = sin(rotation) * SPEED;
+            deltaX = cos(rotation) * enemy.speed;
+            deltaY = sin(rotation) * enemy.speed;
             started = true;
         }
 
@@ -111,7 +108,7 @@ class Circular extends Movement {
 
     void step(Enemy enemy) {
         // Step the spline and set the enemy position
-        spline.step(SPEED / frameRate);
+        spline.step(enemy.speed / frameRate);
         enemy.x = spline.point.x;
         enemy.y = spline.point.y;
     }
@@ -145,7 +142,7 @@ class HorizontalCurve extends Movement {
 
     void step(Enemy enemy) {
         // Step the spline and set the enemy position
-        spline.step(SPEED / frameRate);
+        spline.step(enemy.speed / frameRate);
         enemy.x = spline.point.x;
         enemy.y = spline.point.y;
     }
@@ -172,7 +169,7 @@ class VerticalCurve extends Movement {
 
     void step(Enemy enemy) {
         // Step the spline and set the enemy position
-        spline.step(SPEED / frameRate);
+        spline.step(enemy.speed / frameRate);
         enemy.x = spline.point.x;
         enemy.y = spline.point.y;
     }
@@ -205,7 +202,7 @@ class DiagonalCurve extends Movement {
 
     void step(Enemy enemy) {
         // Step the spline and set the enemy position
-        spline.step(SPEED / frameRate);
+        spline.step(enemy.speed / frameRate);
         enemy.x = spline.point.x;
         enemy.y = spline.point.y;
     }
@@ -236,7 +233,7 @@ class SideCurve extends Movement {
 
     void step(Enemy enemy) {
         // Step the spline and set the enemy position
-        spline.step(SPEED / frameRate);
+        spline.step(enemy.speed / frameRate);
         enemy.x = spline.point.x;
         enemy.y = spline.point.y;
     }

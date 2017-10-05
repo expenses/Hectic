@@ -70,7 +70,7 @@ class MainMenu extends Menu {
         "Shift (held): Slowed movement",
         "Back"
     );
-    
+
     Menu credits = new Menu(
         "Credits",
         "TinyUnicode font:",

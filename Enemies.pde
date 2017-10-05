@@ -3,6 +3,7 @@
 abstract class Enemy extends Hitboxed {
     Movement movement;
     int health;
+    float speed;
 
     boolean step() {
         // Move the enemy
@@ -67,6 +68,7 @@ class Bat extends Enemy {
         this.health = 40;
         this.hitboxWidth = 25;
         this.hitboxHeight = 20;
+        this.speed = 150;
     }
 }
 
@@ -87,9 +89,26 @@ class Gargoyle extends FiringEnemy {
         this.health = 150;
         this.hitboxWidth = 45;
         this.hitboxHeight = 20;
+        this.speed = 150;
     }
 
     Bullet newBullet() {
         return new GargoyleBullet();
+    }
+}
+
+class Spectre extends FiringEnemy {
+    Spectre(Movement movement, FiringPattern firing) {
+        this.movement = movement;
+        this.firing = firing;
+        this.image = resources.spectre;
+        this.health = 80;
+        this.hitboxWidth = 30;
+        this.hitboxHeight = 30;
+        this.speed = 200;
+    }
+
+    Bullet newBullet() {
+        return new SpectreBullet();
     }
 }
