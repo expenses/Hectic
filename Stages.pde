@@ -121,11 +121,13 @@ class Background {
     Background(PImage image, float speed) {
         this.image = image;
         this.speed = speed;
-        this.backgroundHeight = image.height * SCALE - HEIGHT;
+        this.backgroundHeight = image.height * SCALE;
     }
 
     void draw() {
-        drawScale(image, 0, backgroundY - backgroundHeight);
+        float drawHeight = backgroundY + HEIGHT - backgroundHeight;
+        drawScale(image, 0, drawHeight);
+        if (backgroundY + HEIGHT > backgroundHeight) drawScale(image, 0, drawHeight - backgroundHeight);
     }
 
     void step() {
