@@ -125,9 +125,9 @@ class Background {
     }
 
     void draw() {
-        float drawHeight = backgroundY + HEIGHT - backgroundHeight;
-        drawScale(image, 0, drawHeight);
-        if (backgroundY + HEIGHT > backgroundHeight) drawScale(image, 0, drawHeight - backgroundHeight);
+        float drawY = backgroundY + HEIGHT - backgroundHeight;
+        drawScale(image, 0, drawY);
+        if (drawY > 0) drawScale(image, 0, drawY - backgroundHeight);
     }
 
     void step() {
