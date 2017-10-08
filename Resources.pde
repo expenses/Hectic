@@ -28,9 +28,11 @@ class Resources {
     PImage spectreBullet  = loadImage(images + "bullets/spectreBullet.png");
 
     // Backgrounds
-    PImage nightSky   = loadImage(images + "backgrounds/nightSky.png");
-    PImage clouds     = loadImage(images + "backgrounds/clouds.png");
-    PImage graveyard  = loadImage(images + "backgrounds/graveyard.png");
+    PImage nightSky  = loadImage(images + "backgrounds/nightSky.png");
+    PImage clouds    = loadImage(images + "backgrounds/clouds.png");
+    PImage fog       = loadImage(images + "backgrounds/fog.png");
+    PImage darkness  = loadImage(images + "backgrounds/darkness.png");
+    PImage graveyard = loadImage(images + "backgrounds/graveyard.png");
 
     // Explosions!
     PImage[] explosion = new PImage[]{

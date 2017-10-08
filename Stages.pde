@@ -1,13 +1,8 @@
 // The different stages in the game
 
-final float CLOUD_DELTA = 30;
-float cloudY = 0;
-
 // The first stage
 Stage stageOne() {
-    Stage stage = new Stage();
-    stage.background = resources.nightSky;
-    stage.clouds = true;
+    Stage stage = new Stage(new Background(resources.nightSky, 0), new Background(resources.clouds, 30));
 
     // Add all the enemies
 
@@ -50,9 +45,9 @@ Stage stageOne() {
 }
 
 Stage stageTwo() {
-    Stage stage = new Stage();
-    stage.background = resources.graveyard;
-    stage.clouds = true;
+    Stage stage = new Stage(
+        new Background(resources.graveyard, 30), new Background(resources.fog, 60), new Background(resources.darkness, 0)
+    );
 
     for (float s = 5; s < 15; s += 0.5) {
         stage.add(s, new Spectre(new FiringMove(random(0, 1), 15, random(100, 200)), new AtPlayer(3, 0.5, 2)));
@@ -62,13 +57,12 @@ Stage stageTwo() {
 }
 
 class Stage {
-    PImage background;
-    boolean clouds;
     ArrayList<SpawnTime> spawnTimes = new ArrayList<SpawnTime>();
+    Background[] backgrounds;
     float time = 0;
-    float cloudHeight = resources.clouds.height * SCALE - HEIGHT;
 
-    Stage() {
+    Stage(Background... backgrounds) {
+        this.backgrounds = backgrounds;
         state = State.Playing;
         submenu = Submenu.MainMenu;
         reset();
@@ -93,15 +87,11 @@ class Stage {
             }
         });
 
-        // Move the clouds if they're active
-        if (clouds) cloudY = (cloudY + CLOUD_DELTA / frameRate) % cloudHeight;
+        for (Background background: backgrounds) background.step();
     }
 
     void draw() {
-        drawScale(background, 0, 0);
-
-        // Draw the clouds if they're active
-        if (clouds) drawScale(resources.clouds, 0, cloudY - cloudHeight);
+        for (Background background: backgrounds) background.draw();
     }
 
     // Go back to the main menu if the stage is finished
@@ -118,5 +108,27 @@ class SpawnTime {
     SpawnTime(float time, Enemy enemy) {
         this.time = time;
         this.enemy = enemy;
+    }
+}
+
+// A (potentially-parallaxing) background for a stage
+class Background {
+    PImage image;
+    float backgroundY = 0;
+    float backgroundHeight;
+    float speed;
+
+    Background(PImage image, float speed) {
+        this.image = image;
+        this.speed = speed;
+        this.backgroundHeight = image.height * SCALE - HEIGHT;
+    }
+
+    void draw() {
+        drawScale(image, 0, backgroundY - backgroundHeight);
+    }
+
+    void step() {
+        if (speed > 0) backgroundY = (backgroundY + speed / frameRate) % backgroundHeight;
     }
 }

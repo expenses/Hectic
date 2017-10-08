@@ -1,9 +1,5 @@
 // Drawing helper functions
 
-final float ORB_BAR_X = 70;
-final float ORB_BAR_Y = HEIGHT - 35;
-final float ORB_BAR_MAX_WIDTH = WIDTH / 4.0;
-
 // Draw an image at the right scale
 void drawScale(PImage image, float x, float y) {
     image(image, x, y, image.width * SCALE, image.height * SCALE);
@@ -15,6 +11,10 @@ void drawImage(PImage image, float x, float y) {
 }
 
 void drawUI() {
+    final float ORB_BAR_X = 70;
+    final float ORB_BAR_Y = HEIGHT - 35;
+    final float ORB_BAR_MAX_WIDTH = WIDTH / 4.0;
+
     // Draw the player's lives
     drawImage(resources.portrait, 30, HEIGHT - 30);
     text(player.lives, 50, HEIGHT - 25);
