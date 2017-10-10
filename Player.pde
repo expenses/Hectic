@@ -69,7 +69,7 @@ class Player extends Hitboxed {
         // Use a bomb if the orbs at at the max, doing a lot of damage to each enemy
         if (keys.bomb && orbs == orbMax) {
             orbs = 0;
-            // Damage each enemy 10 seperate times (cos it looks cooler than just a single time)
+            // Damage each enemy 10 seperate times (it generates more explosions than just a single time)
             for (Enemy enemy: enemies.array) for (int i = 0; i < 10; i++) enemy.damage(50);
         }
 

@@ -61,17 +61,60 @@ class EnemyBullet extends Bullet {
     }
 }
 
-// The bullets that gargoyles fire
-class GargoyleBullet extends EnemyBullet {
-    GargoyleBullet() {
-        image = resources.gargoyleBullet;
-        speed = 150;
+class ColouredBullet extends EnemyBullet {
+    color colour;
+
+    void draw() {
+        // Tint the bullet with the colour
+        tint(colour);
+        super.draw();
+        noTint();
     }
 }
 
-class SpectreBullet extends EnemyBullet {
-    SpectreBullet() {
-        image = resources.spectreBullet;
-        speed = 200;
+// A factory that creates bullets of a specific type
+// Used so that different boss firing patterns / types of the same enemy can fire different bullets
+class BulletFactory {
+    PImage image;
+    float speed;
+
+    BulletFactory(PImage image, float speed) {
+        this.image = image;
+        this.speed = speed;
+    }
+
+    EnemyBullet make() {
+        EnemyBullet bullet = new EnemyBullet();
+        bullet.image = image;
+        bullet.speed = speed;
+        return bullet;
+    }
+}
+
+class PurpleBulletFactory extends BulletFactory {
+    PurpleBulletFactory(float speed) {
+        super(resources.colouredBullet, speed);
+    }
+
+    EnemyBullet make() {
+        ColouredBullet bullet = new ColouredBullet();
+        bullet.image = image;
+        bullet.speed = speed;
+        bullet.colour = color(270, 80, random(50, 100));
+        return bullet;
+    }
+}
+
+class OrangeBulletFactory extends BulletFactory {
+    OrangeBulletFactory(float speed) {
+        super(resources.colouredBullet, speed);
+    }
+
+    EnemyBullet make() {
+        ColouredBullet bullet = new ColouredBullet();
+        bullet.image = image;
+        bullet.speed = speed;
+        bullet.colour = color(random(15, 45), 100, 100);
+        return bullet;
     }
 }

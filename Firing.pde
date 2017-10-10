@@ -2,6 +2,7 @@
 abstract class FiringPattern {
     float cooldown;
     float cooldownTime;
+    BulletFactory factory;
 
     boolean canFire() {
         cooldown -= deltaTime;
@@ -25,17 +26,18 @@ class AtPlayer extends FiringPattern {
     int total;
     float spread;
 
-    AtPlayer(int total, float spread, float cooldown) {
+    AtPlayer(int total, float spread, float cooldown, BulletFactory factory) {
         this.total = total;
         this.spread = spread;
         this.cooldown = cooldown;
         this.cooldownTime = cooldown;
+        this.factory = factory;
     }
 
     void fire(FiringEnemy firing) {
         if (!canFire()) return;
 
-        // Get the rotaton to the player
+        // Get the rotation to the player
         float rotation = atan2(player.y - firing.y, player.x - firing.x);
 
         for (int i = 0; i < total; i++) {
@@ -43,7 +45,7 @@ class AtPlayer extends FiringPattern {
             float rotationDifference = spread * ((total % 2 == 0 ? (total - 1) / 2.0: total / 2) - i) / total;
 
             // Make a bullet and set it off in the right direction
-            Bullet bullet = firing.newBullet();
+            Bullet bullet = factory.make();
             bullet.x = firing.x;
             bullet.y = firing.y;
             bullet.deltaX = cos(rotation + rotationDifference);
@@ -69,23 +71,25 @@ class Circle extends FiringPattern {
     int tick = 0;
 
     // Make a simple circle with sides, rotation and a cooldown (that has no initial rotation and rotates once per tick)
-    Circle(int sides, float rotationPerFire, float cooldown) {
+    Circle(int sides, float rotationPerFire, float cooldown, BulletFactory factory) {
         this.sides = sides;
         this.initialRotation = 0;
         this.rotationPerFire = rotationPerFire;
         this.rotationFrequency = 1;
         this.cooldown = cooldown;
         this.cooldownTime = cooldown;
+        this.factory = factory;
     }
 
     // Make a more complex circle with all the options
-    Circle(int sides, float initialRotation, float rotationPerFire, int rotationFrequency, float cooldown) {
+    Circle(int sides, float initialRotation, float rotationPerFire, int rotationFrequency, float cooldown, BulletFactory factory) {
         this.sides = sides;
         this.initialRotation = initialRotation;
         this.rotationPerFire = rotationPerFire;
         this.rotationFrequency = rotationFrequency;
         this.cooldown = cooldown;
         this.cooldownTime = cooldown;
+        this.factory = factory;
     }
 
     void fire(FiringEnemy firing) {
@@ -93,7 +97,7 @@ class Circle extends FiringPattern {
 
         // Fire on all the sides
         for (int side = 0; side < sides; side++) {
-            Bullet bullet = firing.newBullet();
+            Bullet bullet = factory.make();
             bullet.x = firing.x;
             bullet.y = firing.y;
 
@@ -123,32 +127,36 @@ class Arc extends FiringPattern {
     float spread;
     int total;
     int count = 0;
+    int increase;
 
-    Arc(float startingRotation, float spread, int total, float cooldown) {
+    Arc(float startingRotation, float spread, int total, float cooldown, int increase, BulletFactory factory) {
         this.startingRotation = startingRotation;
         this.spread = spread;
         this.total = total;
+        this.increase = increase;
         this.cooldown = cooldown;
         this.cooldownTime = cooldown;
+        this.factory = factory;
     }
 
     void fire(FiringEnemy firing) {
-        // Return if all the bullets have been fired
-        if (!canFire() || count == total) return;
+        for (int i = 0; i < increase; i++) {
+            // Return if all the bullets have been fired
+            if (!canFire() || count == total) return;
 
-        // Make the bullet and set it off right
-        Bullet bullet = firing.newBullet();
-        bullet.x = firing.x;
-        bullet.y = firing.y;
-        float rotation = startingRotation + spread * ((float) count / (float) total);
-        bullet.deltaX = cos(rotation) * bullet.speed;
-        bullet.deltaY = sin(rotation) * bullet.speed;
+            // Make the bullet and set it off right
+            Bullet bullet = factory.make();
+            bullet.x = firing.x;
+            bullet.y = firing.y;
+            float rotation = startingRotation + spread * ((float) count / (float) total);
+            bullet.deltaX = cos(rotation) * bullet.speed;
+            bullet.deltaY = sin(rotation) * bullet.speed;
 
-        bullets.add(bullet);
+            bullets.add(bullet);
 
-        // Increase the rotation and count
-        rotation += spread;
-        count ++;
+            // Increase the count
+            count ++;
+        }
 
         setCooldown();
     }

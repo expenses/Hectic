@@ -20,7 +20,6 @@ import java.util.function.Predicate;
 final int     WIDTH      = 480;
 final int     HEIGHT     = 640;
 final float   SCALE      = 2;
-final float   HALF_SCALE = SCALE / 2.0;
 final boolean DEBUG      = false;
 
 // How much time has passed since the last frame

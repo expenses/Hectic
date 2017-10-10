@@ -175,7 +175,7 @@ class VerticalCurve extends Movement {
     }
 }
 
-// Enter the screen throug the top and then exit through a side
+// Enter the screen through the top and then exit through a side
 class DiagonalCurve extends Movement {
     final float FORCE = 1000;
 

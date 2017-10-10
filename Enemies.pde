@@ -39,7 +39,7 @@ abstract class Enemy extends Hitboxed {
         }
     }
 
-    // Is the enmy offscreen? (Adds a bit of padding so that enemies can spawn offscreen)
+    // Is the enemy offscreen? (Adds a bit of padding so that enemies can spawn offscreen)
     boolean offScreen() {
         return x < -image.width  - 50 || x > WIDTH  + image.width  + 50 ||
                y < -image.height - 50 || y > HEIGHT + image.height + 50;
@@ -49,9 +49,6 @@ abstract class Enemy extends Hitboxed {
 // An enemy that fires
 abstract class FiringEnemy extends Enemy {
     FiringPattern firing;
-
-    // The bullet that the enemy fires
-    abstract Bullet newBullet();
 
     boolean step() {
         super.step();
@@ -91,10 +88,6 @@ class Gargoyle extends FiringEnemy {
         this.hitboxHeight = 20;
         this.speed = 150;
     }
-
-    Bullet newBullet() {
-        return new GargoyleBullet();
-    }
 }
 
 class Spectre extends FiringEnemy {
@@ -106,9 +99,5 @@ class Spectre extends FiringEnemy {
         this.hitboxWidth = 30;
         this.hitboxHeight = 30;
         this.speed = 200;
-    }
-
-    Bullet newBullet() {
-        return new SpectreBullet();
     }
 }

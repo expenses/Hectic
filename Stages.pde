@@ -27,9 +27,10 @@ Stage stageOne() {
     }
 
     // Add a triplet of gargoyles
-    stage.add(23, new Gargoyle(new FiringMove(0.50, 10, 100), new AtPlayer(3, 1, 1)));
-    stage.add(23, new Gargoyle(new FiringMove(0.25, 10, 100), new AtPlayer(3, 1, 1)));
-    stage.add(23, new Gargoyle(new FiringMove(0.75, 10, 100), new AtPlayer(3, 1, 1)));
+    BulletFactory rockBullets = new BulletFactory(resources.rockBullet, 150);
+    stage.add(23, new Gargoyle(new FiringMove(0.50, 10, 100), new AtPlayer(3, 1, 1, rockBullets)));
+    stage.add(23, new Gargoyle(new FiringMove(0.25, 10, 100), new AtPlayer(3, 1, 1, rockBullets)));
+    stage.add(23, new Gargoyle(new FiringMove(0.75, 10, 100), new AtPlayer(3, 1, 1, rockBullets)));
 
     for (float s = 25; s < 33; s += 0.25) {
         stage.add(s, new Bat(new Circular(200, 1000)));
@@ -49,9 +50,11 @@ Stage stageTwo() {
         new Background(resources.graveyard, 30), new Background(resources.fog, 60), new Background(resources.darkness, 0)
     );
 
-    for (float s = 5; s < 15; s += 0.5) {
-        stage.add(s, new Spectre(new FiringMove(random(0, 1), 15, random(100, 200)), new AtPlayer(3, 0.5, 2)));
-    }
+    /*for (float s = 5; s < 15; s += 0.5) {
+        stage.add(s, new Spectre(new FiringMove(random(0, 1), 15, random(100, 200)), new AtPlayer(3, 0.5, 2, new BulletFactory(resources.darkBullet, random(100, 200)))));
+    }*/
+    
+    stage.add(2.5, new BossTwo());
 
     return stage;
 }
