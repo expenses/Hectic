@@ -53,8 +53,16 @@ Stage stageTwo() {
     /*for (float s = 5; s < 15; s += 0.5) {
         stage.add(s, new Spectre(new FiringMove(random(0, 1), 15, random(100, 200)), new AtPlayer(3, 0.5, 2, new BulletFactory(resources.darkBullet, random(100, 200)))));
     }*/
-    
-    stage.add(2.5, new BossTwo());
+
+    for (float s = 5;  s < 30; s += 0.5) stage.add(s, new FlyingSkull(new TargetPlayer(random(0, WIDTH), -25)));
+    for (float s = 10; s < 30; s += 0.5) stage.add(s, new FlyingSkull(new TargetPlayer(random(0, WIDTH), -25)));
+
+    for (float s = 10; s < 30; s += 0.5) {
+        stage.add(s, new FlyingSkull(new TargetPlayer(-25, random(0, HEIGHT/2))));
+        stage.add(s, new FlyingSkull(new TargetPlayer(WIDTH + 25, random(0, HEIGHT/2))));
+    }
+
+    stage.add(35, new BossTwo());
 
     return stage;
 }

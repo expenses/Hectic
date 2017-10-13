@@ -3,7 +3,7 @@ Resources resources;
 Player player  = new Player();
 Keys keys = new Keys();
 EntityList<Enemy> enemies = new EntityList<Enemy>();
-EntityList bullets = new EntityList();
+EntityList<Bullet> bullets = new EntityList<Bullet>();
 EntityList effects = new EntityList();
 EntityList pickups = new EntityList();
 Boss boss = null;
@@ -15,12 +15,14 @@ Submenu submenu = Submenu.MainMenu;
 
 // Processing doesn't support the `->` keyword so you have to use predicate classes for stuff :^\
 import java.util.function.Predicate;
+// Hashsets are useful
+import java.util.HashSet;
 
 // Final variables. Turn `DEBUG` on and off to see debug info and hitboxes
-final int     WIDTH      = 480;
-final int     HEIGHT     = 640;
-final float   SCALE      = 2;
-final boolean DEBUG      = false;
+final int     WIDTH  = 480;
+final int     HEIGHT = 640;
+final float   SCALE  = 2;
+final boolean DEBUG  = false;
 
 // How much time has passed since the last frame
 float deltaTime = 0;
@@ -42,7 +44,7 @@ enum Submenu {
 
 void settings() {
     // Set the size and renderer to P2D (uses OpenGL)
-    size(WIDTH, HEIGHT, P2D); 
+    size(WIDTH, HEIGHT, P2D);
 }
 
 void setup() {

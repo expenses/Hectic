@@ -45,9 +45,7 @@ class AtPlayer extends FiringPattern {
             float rotationDifference = spread * ((total % 2 == 0 ? (total - 1) / 2.0: total / 2) - i) / total;
 
             // Make a bullet and set it off in the right direction
-            Bullet bullet = factory.make();
-            bullet.x = firing.x;
-            bullet.y = firing.y;
+            Bullet bullet = factory.make(firing.x, firing.y);
             bullet.deltaX = cos(rotation + rotationDifference);
             bullet.deltaY = sin(rotation + rotationDifference);
 
@@ -97,9 +95,7 @@ class Circle extends FiringPattern {
 
         // Fire on all the sides
         for (int side = 0; side < sides; side++) {
-            Bullet bullet = factory.make();
-            bullet.x = firing.x;
-            bullet.y = firing.y;
+            Bullet bullet = factory.make(firing.x, firing.y);
 
             float rotation = ((float) side / (float) sides) * TWO_PI + initialRotation;
             bullet.deltaX = cos(rotation) * bullet.speed;
@@ -145,9 +141,7 @@ class Arc extends FiringPattern {
             if (!canFire() || count == total) return;
 
             // Make the bullet and set it off right
-            Bullet bullet = factory.make();
-            bullet.x = firing.x;
-            bullet.y = firing.y;
+            Bullet bullet = factory.make(firing.x, firing.y);
             float rotation = startingRotation + spread * ((float) count / (float) total);
             bullet.deltaX = cos(rotation) * bullet.speed;
             bullet.deltaY = sin(rotation) * bullet.speed;

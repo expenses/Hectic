@@ -8,7 +8,14 @@ class Bullet extends Entity {
     float deltaY;
 
     float speed;
-  
+
+    Bullet(PImage image, float speed, float x, float y) {
+        this.image = image;
+        this.speed = speed;
+        this.x = x;
+        this.y = y;
+    }
+
     boolean step() {
         x += deltaX / frameRate;
         y += deltaY / frameRate;
@@ -24,12 +31,9 @@ class Bullet extends Entity {
 // The bullets that the player fires
 class PlayerBullet extends Bullet {
     PlayerBullet(float rotation) {
-        this.speed = 1000;
-        this.x = player.x;
-        this.y = player.y;
+        super(resources.playerBullet, 1000, player.x, player.y);
         this.deltaX = cos(rotation - HALF_PI) * this.speed;
         this.deltaY = sin(rotation - HALF_PI) * this.speed;
-        this.image = resources.playerBullet;
     }
 
     // Bullets stop if they collide with enemies
@@ -48,6 +52,10 @@ class PlayerBullet extends Bullet {
 }
 
 class EnemyBullet extends Bullet {
+    EnemyBullet(PImage image, float speed, float x, float y) {
+        super(image, speed, x, y);
+    }
+
     // Enemy bullets stop if they collide with the player
     boolean step() {
         if (super.step()) return true;
@@ -63,6 +71,11 @@ class EnemyBullet extends Bullet {
 
 class ColouredBullet extends EnemyBullet {
     color colour;
+
+    ColouredBullet(PImage image, float speed, float x, float y, color colour) {
+        super(image, speed, x, y);
+        this.colour = colour;
+    }
 
     void draw() {
         // Tint the bullet with the colour
@@ -83,11 +96,8 @@ class BulletFactory {
         this.speed = speed;
     }
 
-    EnemyBullet make() {
-        EnemyBullet bullet = new EnemyBullet();
-        bullet.image = image;
-        bullet.speed = speed;
-        return bullet;
+    EnemyBullet make(float x, float y) {
+        return new EnemyBullet(image, speed, x, y);
     }
 }
 
@@ -96,12 +106,8 @@ class PurpleBulletFactory extends BulletFactory {
         super(resources.colouredBullet, speed);
     }
 
-    EnemyBullet make() {
-        ColouredBullet bullet = new ColouredBullet();
-        bullet.image = image;
-        bullet.speed = speed;
-        bullet.colour = color(270, 80, random(50, 100));
-        return bullet;
+    EnemyBullet make(float x, float y) {
+        return new ColouredBullet(image, speed, x, y, color(270, 80, random(50, 100)));
     }
 }
 
@@ -110,11 +116,7 @@ class OrangeBulletFactory extends BulletFactory {
         super(resources.colouredBullet, speed);
     }
 
-    EnemyBullet make() {
-        ColouredBullet bullet = new ColouredBullet();
-        bullet.image = image;
-        bullet.speed = speed;
-        bullet.colour = color(random(15, 45), 100, 100);
-        return bullet;
+    EnemyBullet make(float x, float y) {
+        return new ColouredBullet(image, speed, x, y, color(random(15, 45), 100, 100));
     }
 }

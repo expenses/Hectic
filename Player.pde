@@ -9,6 +9,8 @@ class Player extends Hitboxed {
     int lives = 3;
     int orbs = 0;
 
+    Bomb bomb;
+
     Player() {
         x = WIDTH  * 0.5;
         y = HEIGHT * 0.75;
@@ -25,7 +27,7 @@ class Player extends Hitboxed {
             }
 
             lives--;
-            invulnerableTime = 5;
+            invulnerableTime = 3;
         }
     }
 
@@ -43,6 +45,8 @@ class Player extends Hitboxed {
         }
 
         super.draw();
+
+        if (bomb != null) bomb.draw();
     }
 
     boolean step() {
@@ -69,10 +73,48 @@ class Player extends Hitboxed {
         // Use a bomb if the orbs at at the max, doing a lot of damage to each enemy
         if (keys.bomb && orbs == orbMax) {
             orbs = 0;
-            // Damage each enemy 10 seperate times (it generates more explosions than just a single time)
-            for (Enemy enemy: enemies.array) for (int i = 0; i < 10; i++) enemy.damage(50);
+            bomb = new Bomb(x, y);
         }
 
+        if (bomb != null && !bomb.step()) bomb = null;
+
         return true;
+    }
+}
+
+class Bomb extends Entity {
+    final int DAMAGE = 500;
+    final float SPEED = 500;
+
+    float radius = 0;
+    HashSet hit = new HashSet();
+
+    Bomb(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    void draw() {
+        ellipse(x, y, radius * 2, radius * 2);
+    }
+
+    boolean step() {
+        // Loop through unhit enemies
+        for (Enemy enemy: enemies.array) if (!hit.contains(enemy) && distanceTo(enemy) < radius) {
+            // Deal damage to the enemy 10 times (10x the explosions!)
+            for (int i = 0; i < 10; i++) enemy.damage(DAMAGE / 10);
+            // Add it to the hashset
+            hit.add(enemy);
+        }
+
+        // Remove all the bullets in the radius of the bomb
+        bullets.array.removeIf(new Predicate<Bullet>() {
+            public boolean test(Bullet bullet) {
+                return distanceTo(bullet) < radius;
+            }
+        });
+
+        radius += SPEED / frameRate;
+        return radius < mag(HEIGHT, WIDTH);
     }
 }

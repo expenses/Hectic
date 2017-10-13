@@ -29,7 +29,7 @@ abstract class Enemy extends Hitboxed {
 
     void damage(float x, float y, int damage) {
         effects.add(new Explosion(x, y));
-        health -= damage; 
+        health -= damage;
     }
 
     void die() {
@@ -87,6 +87,17 @@ class Gargoyle extends FiringEnemy {
         this.hitboxWidth = 45;
         this.hitboxHeight = 20;
         this.speed = 150;
+    }
+}
+
+class FlyingSkull extends Enemy {
+    FlyingSkull(Movement movement) {
+        this.movement = movement;
+        this.image = resources.flyingSkull;
+        this.health = 40;
+        this.speed = 200;
+        this.hitboxHeight = 25;
+        this.hitboxWidth = 25;
     }
 }
 

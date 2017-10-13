@@ -247,36 +247,36 @@ class Spline {
     // How precise the distance needs to be.
     // Increasing this will make stepping faster but more error-prone
     final float PRECISION = 0.1;
-    
+
     PVector a;
     PVector b;
     PVector c;
     PVector d;
     float t = 0;
-    
+
     PVector point;
-    
+
     Spline(PVector a, PVector b, PVector c, PVector d) {
         this.a = a;
         this.b = b;
         this.c = c;
         this.d = d;
-        
+
         this.point = b;
     }
-    
+
     // Interpolate the curve to find a point
     PVector interpolate(float t) {
         return new PVector(curvePoint(a.x, b.x, c.x, d.x, t), curvePoint(a.y, b.y, c.y, d.y, t));
     }
-    
+
     // Use binary search to find an appropriate t value so that the distance between the points ensures a CONSTANT SPEED
-    // This works pretty well, but only for simple curves (? It might work for more complex curves too, idk). 
+    // This works pretty well, but only for simple curves (? It might work for more complex curves too, idk).
     void step(float distance) {
         // Get the min and max t values to check
         float minT = t;
         float maxT = t + MAX_INCREASE;
-        
+
         while (true) {
             // Test a t value
             float testT = (minT + maxT) / 2.0;

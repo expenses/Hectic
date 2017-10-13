@@ -6,6 +6,10 @@ abstract class Entity {
     float y;
     PImage image;
 
+    float distanceTo(Entity entity) {
+        return mag(x - entity.x, y - entity.y);
+    }
+
     void draw() {
         drawImage(image, x, y);
     }
@@ -23,7 +27,7 @@ abstract class Hitboxed extends Entity {
     float left()   { return x - hitboxWidth / 2.0;  }
     float right()  { return x + hitboxWidth / 2.0;  }
     float top()    { return y - hitboxHeight / 2.0; }
-    float bottom() { return y + hitboxHeight / 2.0; } 
+    float bottom() { return y + hitboxHeight / 2.0; }
 
     void draw() {
         drawImage(image, x, y);

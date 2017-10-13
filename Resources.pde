@@ -15,12 +15,13 @@ class Resources {
     PImage pauseOverlay     = loadImage(images + "ui/pauseOverlay.png");
 
     // Enemies
-    PImage bat      = loadImage(images + "enemies/bat.png");
-    PImage hellBat  = loadImage(images + "enemies/hellBat.png");
-    PImage gargoyle = loadImage(images + "enemies/gargoyle.png");
-    PImage spectre  = loadImage(images + "enemies/spectre.png");
-    PImage bossOne  = loadImage(images + "enemies/bossOne.png");
-    PImage bossTwo  = loadImage(images + "enemies/bossTwo.png");
+    PImage bat         = loadImage(images + "enemies/bat.png");
+    PImage hellBat     = loadImage(images + "enemies/hellBat.png");
+    PImage gargoyle    = loadImage(images + "enemies/gargoyle.png");
+    PImage flyingSkull = loadImage(images + "enemies/flyingSkull.png");
+    PImage spectre     = loadImage(images + "enemies/spectre.png");
+    PImage bossOne     = loadImage(images + "enemies/bossOne.png");
+    PImage bossTwo     = loadImage(images + "enemies/bossTwo.png");
 
     // Bullets
     PImage playerBullet   = loadImage(images + "bullets/playerBullet.png");

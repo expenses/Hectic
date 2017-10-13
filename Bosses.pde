@@ -27,7 +27,7 @@ class BossMove {
         }
 
         // Otherwise fire all the patterns
-        for(FiringPattern pattern: patterns) pattern.fire(boss);
+        for (FiringPattern pattern: patterns) pattern.fire(boss);
     }
 
     boolean finished() {
@@ -45,6 +45,17 @@ abstract class Boss extends FiringEnemy {
     int maxHealth;
     int move = 0;
     BossMove[] moves;
+
+    Boss(int health, PImage image) {
+        this.health = health;
+        this.maxHealth = health;
+        this.image = image;
+        this.speed = 200;
+        this.x = WIDTH / 2.0;
+        this.y = -50;
+        this.hitboxWidth = 30;
+        this.hitboxHeight = 40;
+    }
 
     // Finish the stage if the boss is killed
     void die() {
@@ -74,15 +85,7 @@ abstract class Boss extends FiringEnemy {
 
 class BossOne extends Boss {
     BossOne() {
-        this.speed = 200;
-        this.x = WIDTH / 2.0;
-        this.y = -50;
-
-        this.image = resources.bossOne;
-        this.maxHealth = 3000;
-        this.health = this.maxHealth;
-        this.hitboxWidth = 30;
-        this.hitboxHeight = 40;
+        super(3000, resources.bossOne);
 
         BulletFactory factory = new OrangeBulletFactory(200);
 
@@ -97,15 +100,7 @@ class BossOne extends Boss {
 
 class BossTwo extends Boss {
     BossTwo() {
-        this.speed = 200;
-        this.x = WIDTH / 2.0;
-        this.y = -50;
-
-        this.image = resources.bossTwo;
-        this.maxHealth = 4000;
-        this.health = this.maxHealth;
-        this.hitboxWidth = 30;
-        this.hitboxHeight = 40;
+        super(4000, resources.bossTwo);
 
         BulletFactory purple = new PurpleBulletFactory(200);
         BulletFactory dark = new BulletFactory(resources.darkBullet, 200);
@@ -114,11 +109,11 @@ class BossTwo extends Boss {
             new BossMove(WIDTH/2, 150, 3, new Arc(HALF_PI, TWO_PI, 100, 0.015, 2, dark)),
             new BossMove(WIDTH/2 - 50, 160, 3, new Arc(HALF_PI, -TWO_PI, 100, 0.015, 2, dark)),
             new BossMove(WIDTH/2 + 50, 170, 5,
-                new Arc(HALF_PI, 2 * TWO_PI, 100, 0.015, 2, dark),
-                new Arc(HALF_PI, 2 * -TWO_PI, 100, 0.015, 2, dark)
+                new Arc(0 , 2 *  TWO_PI, 101, 0.03, 2, dark),
+                new Arc(PI, 2 * -TWO_PI, 101, 0.03, 2, dark)
             ),
             //new BossMove(100, 100, 6, new Arc(HALF_PI, -TWO_PI, 100, 0.015, 2, purple), new AtPlayer(3, 0.1, 0.2, dark)),
-            new BossMove(100, 100, 10, new Arc(HALF_PI, 10 * -TWO_PI, 999, 0.015, 2, purple))
+            new BossMove(100, 100, 10, new Arc(HALF_PI, 10 * -TWO_PI, 777, 0.01, 1, purple))
         };
     }
 }
