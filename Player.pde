@@ -23,6 +23,7 @@ class Player extends Hitboxed {
             // Return to the main menu if the player is dead
             if (lives == 0) {
                 state = State.MainMenu;
+                submenu = Submenu.StageFailed;
                 return;
             }
 
@@ -46,17 +47,21 @@ class Player extends Hitboxed {
 
         super.draw();
 
+        // Draw the bomb if applicable
         if (bomb != null) bomb.draw();
     }
 
     boolean step() {
+        // Determine the speed
         float speed = (keys.slow ? SPEED / 2.0 : SPEED) / frameRate;
 
+        // Move the player
         if (keys.up && top() > 0) y -= speed;
         if (keys.down && bottom() < HEIGHT) y += speed;
         if (keys.left && left() > 0) x -= speed;
         if (keys.right && right() < WIDTH) x += speed;
 
+        // Decrease the cooldown and the invulnerable time
         cooldown -= deltaTime;
         invulnerableTime -= deltaTime;
 
@@ -76,12 +81,14 @@ class Player extends Hitboxed {
             bomb = new Bomb(x, y);
         }
 
+        // Step the bomb and remove it if its finished
         if (bomb != null && !bomb.step()) bomb = null;
 
         return true;
     }
 }
 
+// The bomb the player creates
 class Bomb extends Entity {
     final int DAMAGE = 500;
     final float SPEED = 500;
@@ -94,6 +101,7 @@ class Bomb extends Entity {
         this.y = y;
     }
 
+    // Draw an ellipse
     void draw() {
         ellipse(x, y, radius * 2, radius * 2);
     }

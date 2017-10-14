@@ -15,6 +15,7 @@ class FiringMove extends Movement {
     float y;
 
     FiringMove(float screenPercentage, float duration, float yEnd) {
+        // Multiply the screen percentage by the width of the screen to get an x value
         this.x = WIDTH * screenPercentage;
         this.y = START_Y;
         this.yEnd = yEnd;
@@ -24,6 +25,7 @@ class FiringMove extends Movement {
     void step(Enemy enemy) {
         float distance = enemy.speed / frameRate;
 
+        // Move the enemy into the screen or wait or go back out
         if (time == 0.0 && y < yEnd) {
             y += distance;
         } else if (time < duration) {
@@ -48,6 +50,7 @@ class MoveTowards extends Movement {
     }
 
     void step(Enemy enemy) {
+        // Get the distance to the position
         float distance = mag(x - enemy.x, y - enemy.y);
         float travel = enemy.speed / frameRate;
 
@@ -77,6 +80,7 @@ class TargetPlayer extends Movement {
 
     void step(Enemy enemy) {
         if (!started) {
+            // Determine the delta to the player
             enemy.x = x;
             enemy.y = y;
             float rotation = atan2(player.y - enemy.y, player.x - enemy.x);
@@ -85,6 +89,7 @@ class TargetPlayer extends Movement {
             started = true;
         }
 
+        // Move along that direction
         enemy.x += deltaX / frameRate;
         enemy.y += deltaY / frameRate;
     }
@@ -208,6 +213,7 @@ class DiagonalCurve extends Movement {
     }
 }
 
+// Currently unused movement pattern
 // Enter the screen from one side (left or right) and then leave it through the same side
 class SideCurve extends Movement {
     Spline spline;

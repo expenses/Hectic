@@ -16,12 +16,14 @@ class Bullet extends Entity {
         this.y = y;
     }
 
+    // Move the bullet
     boolean step() {
         x += deltaX / frameRate;
         y += deltaY / frameRate;
         return offScreen();
     }
 
+    // Determine if the bullet is offsceen
     boolean offScreen() {
         return x < -image.width  || x > WIDTH  + image.width ||
                y < -image.height || y > HEIGHT + image.height;
@@ -30,6 +32,7 @@ class Bullet extends Entity {
 
 // The bullets that the player fires
 class PlayerBullet extends Bullet {
+    // Initialise a bullet with a rotation
     PlayerBullet(float rotation) {
         super(resources.playerBullet, 1000, player.x, player.y);
         this.deltaX = cos(rotation - HALF_PI) * this.speed;
@@ -69,6 +72,7 @@ class EnemyBullet extends Bullet {
     }
 }
 
+// A bullet that is drawn with a colour tint
 class ColouredBullet extends EnemyBullet {
     color colour;
 
@@ -101,6 +105,7 @@ class BulletFactory {
     }
 }
 
+// This factory creates bullets with a random purple colour
 class PurpleBulletFactory extends BulletFactory {
     PurpleBulletFactory(float speed) {
         super(resources.colouredBullet, speed);
@@ -111,6 +116,7 @@ class PurpleBulletFactory extends BulletFactory {
     }
 }
 
+// This factory creates bullets with a random orange colour
 class OrangeBulletFactory extends BulletFactory {
     OrangeBulletFactory(float speed) {
         super(resources.colouredBullet, speed);

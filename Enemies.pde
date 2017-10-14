@@ -14,6 +14,7 @@ abstract class Enemy extends Hitboxed {
         return remove();
     }
 
+    // Determine if the enemy should be removed
     boolean remove() {
         if (health <= 0) {
             die();
@@ -23,15 +24,18 @@ abstract class Enemy extends Hitboxed {
         return offScreen();
     }
 
+    // Damage the enemy
     void damage(int damage) {
         damage(x, y, damage);
     }
 
+    // Damage the enemy at a particular location (to spawn an exlosion there)
     void damage(float x, float y, int damage) {
         effects.add(new Explosion(x, y));
         health -= damage;
     }
 
+    // Kill the enemy and drop a pickup
     void die() {
         if (random(1.0) > 0.6) {
             int value = random(1.0) > 0.9 ? 5 : 1;
@@ -69,6 +73,7 @@ class Bat extends Enemy {
     }
 }
 
+// A bat that has more health
 class HellBat extends Bat {
     HellBat(Movement movement) {
         super(movement);
@@ -90,6 +95,7 @@ class Gargoyle extends FiringEnemy {
     }
 }
 
+// An annoying flying skull enemy
 class FlyingSkull extends Enemy {
     FlyingSkull(Movement movement) {
         this.movement = movement;
@@ -101,6 +107,7 @@ class FlyingSkull extends Enemy {
     }
 }
 
+// A spooky spectre
 class Spectre extends FiringEnemy {
     Spectre(Movement movement, FiringPattern firing) {
         this.movement = movement;

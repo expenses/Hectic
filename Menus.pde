@@ -3,10 +3,14 @@ class Menu {
     String[] items;
     String title;
     int selected = 0;
+    float yOffset;
 
-    Menu(String title, String... items) {
+    // Create a new menu with a list of items
+    Menu(String title, float yOffset, String... items) {
         this.title = title;
+        this.yOffset = yOffset;
         this.items = items;
+        this.selected = items.length - 1;
     }
 
     void draw() {
@@ -15,7 +19,16 @@ class Menu {
         // Draw the menu title
         textFont(resources.oldeEnglish);
         scale(2);
-        text(title, WIDTH / 4.0, HEIGHT / 8.0 + 17);
+
+        // Draw each line of text on the center
+        String[] split = title.split("\n");
+        float y = HEIGHT / 8.0 + 15;
+        
+        for (String line: split) {
+            text(line, WIDTH / 4.0, y);
+            y += 60;
+        }
+
         resetMatrix();
         textFont(resources.tinyUnicode);
 
@@ -23,7 +36,7 @@ class Menu {
         for (int i = 0; i < items.length; i++) {
             // Add a `>` if the item is selected
             String item = selected == i ? "> " + items[i] : items[i];
-            text(item, WIDTH / 2.0, HEIGHT / 2.0 + i * 20);
+            text(item, WIDTH / 2.0, HEIGHT / 2.0 + i * 20 + yOffset);
         }
 
         textAlign(LEFT);
@@ -55,24 +68,19 @@ class Menu {
 
 // The main menu
 class MainMenu extends Menu {
-    Menu stages = new Menu(
-        "Stages",
-        "Stage One",
-        "Stage Two",
-        "Back"
-    );
+    // All the submenus
 
     Menu controls = new Menu(
-        "Controls",
-        "Arrow Keys: Movement",
-        "Z: Fire",
-        "X: Special Attack",
-        "Shift (held): Slowed movement",
+        "Controls", 0,
+        "Arrow keys to move",
+        "Z (held) to fire",
+        "X to perform a special attack if the orb bar is full",
+        "Shift (held) to move slower to dodge more easily",
         "Back"
     );
 
     Menu credits = new Menu(
-        "Credits",
+        "Credits", 0,
         "TinyUnicode font:",
         "https://www.dafont.com/tinyunicode.font",
         "",
@@ -85,10 +93,26 @@ class MainMenu extends Menu {
         "Back"
     );
 
+    Menu stageFailed = new Menu(
+        "Stage\nFailed", 100,
+        "Back to main menu"
+    );
+
+    Menu stageComplete = new Menu(
+        "Stage\nComplete", 100,
+        "Next Stage",
+        "Back to main menu"
+    );
+
+    Menu gameComplete = new Menu(
+        "Game\nComplete", 100,
+        "Back to main menu"
+    );
+
     MainMenu() {
-        super("Hectic", "Play Game", "Controls", "Credits", "Quit");
-        credits.selected = credits.items.length - 1;
-        controls.selected = controls.items.length - 1;
+        super("Hectic", 0, "Play Game", "Controls", "Credits", "Quit");
+        selected = 0;
+        stageComplete.selected = 0;
     }
 
     void handleKey() {
@@ -97,30 +121,30 @@ class MainMenu extends Menu {
         boolean esc = keyCode == ESC;
         boolean confirm = keyCode == ENTER || keyCode == Z_KEY;
 
-        if (submenu != Submenu.MainMenu && submenu != Submenu.Stages && (esc || confirm)) {
+        if (submenu != Submenu.MainMenu && submenu != Submenu.StageComplete && (esc || confirm)) {
             submenu = Submenu.MainMenu;
             return;
         }
 
-        if (submenu == Submenu.Stages) {
-            stages.handleKey();
+        // Change stage or go back to the main menu
+        if (submenu == Submenu.StageComplete) {
+            stageComplete.handleKey();
 
             if (confirm) {
-                switch(stages.selected) {
+                switch(stageComplete.selected) {
                     case 0:
-                       stage = stageOne();
-                       break;
-                    case 1:
                         stage = stageTwo();
                         break;
-                    case 2:
+                    case 1:
                         submenu = Submenu.MainMenu;
                         break;
                 }
             }
+            
             return;
         }
 
+        // Enter a submenu
         if (submenu == Submenu.MainMenu) {
             super.handleKey();
 
@@ -130,7 +154,7 @@ class MainMenu extends Menu {
             } else if (confirm) {
                 switch (selected) {
                 case 0:
-                    submenu = Submenu.Stages;
+                    stage = stageOne();
                     break;
                 case 1:
                     // Open the controls submenu
@@ -148,6 +172,7 @@ class MainMenu extends Menu {
         }
     }
 
+    // Draw the main menu
     void draw() {
         background(0, 75, 50);
 
@@ -155,22 +180,30 @@ class MainMenu extends Menu {
             case MainMenu:
                 super.draw();
                 break;
-            case Stages:
-                stages.draw();
-                break;
             case Controls:
                 controls.draw();
                 break;
             case Credits:
                 credits.draw();
                 break;
+            case StageFailed:
+                stageFailed.draw();
+                break;
+            case StageComplete:
+                stageComplete.draw();
+                break;
+            case GameComplete:
+                gameComplete.draw();
+                break;
         }
     }
 }
 
+// The menu for when the game is paused
 class PausedMenu extends Menu {
     PausedMenu() {
-        super("Paused", "Continue", "Main menu");
+        super("Paused", 0, "Continue", "Main menu");
+        this.selected = 0;
     }
 
     void handleKey() {
@@ -182,5 +215,11 @@ class PausedMenu extends Menu {
         } else if (keyCode == ENTER || keyCode == Z_KEY) {
             state = selected == 0 ? State.Playing : State.MainMenu;
         }
+    }
+
+    void draw() {
+        // Draw a transparent overlay
+        image(resources.pauseOverlay, 0, 0, WIDTH, HEIGHT);
+        super.draw();
     }
 }

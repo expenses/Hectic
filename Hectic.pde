@@ -15,7 +15,7 @@ Submenu submenu = Submenu.MainMenu;
 
 // Processing doesn't support the `->` keyword so you have to use predicate classes for stuff :^\
 import java.util.function.Predicate;
-// Hashsets are useful
+// HashSets are useful
 import java.util.HashSet;
 
 // Final variables. Turn `DEBUG` on and off to see debug info and hitboxes
@@ -37,9 +37,11 @@ enum State {
 // Which submenu of the main menu the game is in
 enum Submenu {
     MainMenu,
-    Stages,
     Controls,
-    Credits
+    Credits,
+    StageFailed,
+    StageComplete,
+    GameComplete
 }
 
 void settings() {
@@ -49,6 +51,8 @@ void settings() {
 
 void setup() {
     // Set the texture sampling to mode 2 (Nearest Neighbour)
+    // NOTE: This works fine on my home computers and the CO242 ones,
+    // but NOT on the CO219 ones, where it uses the default (driver problems perhaps?)
     ((PGraphicsOpenGL) g).textureSampling(2);
     // Set the framerate
     frameRate(60);
@@ -104,12 +108,7 @@ void draw() {
     // Draw the user interface
     drawUI();
 
-    if (state == State.Paused) {
-        // Draw a transparent overlay
-        image(resources.pauseOverlay, 0, 0, WIDTH, HEIGHT);
-        // And the pause menu
-        pausedMenu.draw();
-    }
+    if (state == State.Paused) pausedMenu.draw();
 }
 
 // Reset all the game fields

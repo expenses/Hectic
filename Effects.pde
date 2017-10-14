@@ -10,6 +10,7 @@ abstract class Effect extends Entity {
     }
 }
 
+// An explosion that switches through the images
 class Explosion extends Effect {
     Explosion(float x, float y) {
         // Add a bit of randomness to the position

@@ -6,6 +6,7 @@ abstract class Entity {
     float y;
     PImage image;
 
+    // The distance to another enemy (`mag` == `hypot`)
     float distanceTo(Entity entity) {
         return mag(x - entity.x, y - entity.y);
     }

@@ -4,13 +4,10 @@ abstract class FiringPattern {
     float cooldownTime;
     BulletFactory factory;
 
+    // Determine if the enemy can fire
     boolean canFire() {
         cooldown -= deltaTime;
         return cooldown < 0;
-    }
-
-    void setCooldown() {
-        cooldown = cooldownTime;
     }
 
     // Get an enemy to fire
@@ -56,7 +53,7 @@ class AtPlayer extends FiringPattern {
             bullets.add(bullet);
         }
 
-        setCooldown();
+        reset();
     }
 }
 
@@ -79,6 +76,7 @@ class Circle extends FiringPattern {
         this.factory = factory;
     }
 
+    /* Not currently used
     // Make a more complex circle with all the options
     Circle(int sides, float initialRotation, float rotationPerFire, int rotationFrequency, float cooldown, BulletFactory factory) {
         this.sides = sides;
@@ -88,7 +86,7 @@ class Circle extends FiringPattern {
         this.cooldown = cooldown;
         this.cooldownTime = cooldown;
         this.factory = factory;
-    }
+    }*/
 
     void fire(FiringEnemy firing) {
         if (!canFire()) return;
@@ -108,7 +106,7 @@ class Circle extends FiringPattern {
         tick ++;
         if (tick % rotationFrequency == 0) initialRotation += rotationPerFire;
 
-        setCooldown();
+        super.reset();
     }
 
     void reset() {
@@ -152,7 +150,7 @@ class Arc extends FiringPattern {
             count ++;
         }
 
-        setCooldown();
+        super.reset();
     }
 
     void reset() {
