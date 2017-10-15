@@ -6,7 +6,7 @@ class Player extends Hitboxed {
 
     float cooldown = 0;
     float invulnerableTime = 0;
-    int lives = 3;
+    int lives = 2;
     int orbs = 0;
 
     Bomb bomb;

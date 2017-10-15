@@ -90,6 +90,7 @@ class Stage {
     Background[] backgrounds;
     float time = 0;
     int number;
+    boolean finished = false;
 
     Stage(int number, Background... backgrounds) {
         this.number = number;
@@ -122,6 +123,12 @@ class Stage {
 
         // Move the backgrounds
         for (Background background: backgrounds) background.step();
+
+        // If the stage has been finished and 2 seconds have elapsed, open a menu
+        if (finished && time > 2) {
+            state = State.MainMenu;
+            submenu = number < 2 ? Submenu.StageComplete : Submenu.GameComplete;
+        }
     }
 
     // Draw the backgrounds
@@ -129,10 +136,12 @@ class Stage {
         for (Background background: backgrounds) background.draw();
     }
 
-    // Go back to the main menu if the stage is finished
+    // If the stage is finished, reset the time and explode the bullets
     void finish() {
-        state = State.MainMenu;
-        submenu = number < 2 ? Submenu.StageComplete : Submenu.GameComplete;
+        finished = true;
+        time = 0;
+        for (Bullet bullet: bullets.array) effects.add(new Explosion(bullet.x, bullet.y));
+        bullets.array.clear();
     }
 }
 
