@@ -67,11 +67,11 @@ class Player extends Hitboxed {
 
         if (keys.fire && cooldown < 0) {
             // Spawn 5 bullets
-            bullets.add(new PlayerBullet(-0.2));
-            bullets.add(new PlayerBullet(-0.1));
-            bullets.add(new PlayerBullet(0));
-            bullets.add(new PlayerBullet(0.1));
-            bullets.add(new PlayerBullet(0.2));
+            playerBullets.add(new PlayerBullet(-0.2));
+            playerBullets.add(new PlayerBullet(-0.1));
+            playerBullets.add(new PlayerBullet(0));
+            playerBullets.add(new PlayerBullet(0.1));
+            playerBullets.add(new PlayerBullet(0.2));
             cooldown = COOLDOWN;
         }
 

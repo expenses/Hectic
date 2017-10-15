@@ -1,3 +1,2 @@
 * TODO Add more effects when stuff fires
 * TODO All entities should probably have hitboxes tbh, just that bullets have small ones
-* TODO

@@ -4,6 +4,7 @@ Player player  = new Player();
 Keys keys = new Keys();
 EntityList<Enemy> enemies = new EntityList<Enemy>();
 EntityList<Bullet> bullets = new EntityList<Bullet>();
+EntityList<PlayerBullet> playerBullets = new EntityList<PlayerBullet>();
 EntityList effects = new EntityList();
 EntityList pickups = new EntityList();
 Boss boss = null;
@@ -79,6 +80,7 @@ void update() {
     stage.step();
     player.step();
     pickups.step();
+    playerBullets.step();
     bullets.step();
     enemies.step();
     effects.step();
@@ -101,6 +103,7 @@ void draw() {
     stage.draw();
     player.draw();
     pickups.draw();
+    playerBullets.draw();
     bullets.draw();
     enemies.draw();
     effects.draw();
@@ -115,8 +118,9 @@ void draw() {
 void reset() {
     player = new Player();
     keys = new Keys();
-    enemies = new EntityList<Enemy>();
+    enemies = new EntityList();
     bullets = new EntityList();
+    playerBullets = new EntityList();
     effects = new EntityList();
     pickups = new EntityList();
     boss = null;

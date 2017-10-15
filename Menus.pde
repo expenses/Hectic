@@ -14,31 +14,15 @@ class Menu {
     }
 
     void draw() {
+        drawTitle(title, WIDTH / 2.0, HEIGHT / 4.0 + 8);
+
         textAlign(CENTER);
-
-        // Draw the menu title
-        textFont(resources.oldeEnglish);
-        scale(2);
-
-        // Draw each line of text on the center
-        String[] split = title.split("\n");
-        float y = HEIGHT / 8.0 + 15;
-        
-        for (String line: split) {
-            text(line, WIDTH / 4.0, y);
-            y += 60;
-        }
-
-        resetMatrix();
-        textFont(resources.tinyUnicode);
-
         // Draw the menu items
         for (int i = 0; i < items.length; i++) {
             // Add a `>` if the item is selected
             String item = selected == i ? "> " + items[i] : items[i];
             text(item, WIDTH / 2.0, HEIGHT / 2.0 + i * 20 + yOffset);
         }
-
         textAlign(LEFT);
     }
 

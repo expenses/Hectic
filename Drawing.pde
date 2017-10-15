@@ -10,6 +10,21 @@ void drawImage(PImage image, float x, float y) {
     drawScale(image, x - image.width, y - image.height);
 }
 
+// Draw a title for something
+void drawTitle(String string, float x, float y) {
+    textAlign(CENTER);
+    textFont(resources.oldeEnglish);
+    scale(2);
+    // Draw each line of text on the center
+    for (String line: string.split("\n")) {
+        text(line, x / 2, y / 2);
+        y += 120;
+    }
+    resetMatrix();
+    textFont(resources.tinyUnicode);
+    textAlign(LEFT);
+}
+
 void drawUI() {
     final float ORB_BAR_X = 70;
     final float ORB_BAR_Y = HEIGHT - 35;
@@ -32,7 +47,7 @@ void drawUI() {
     if (DEBUG) {
         text(String.format("FPS: %.1f", frameRate),        WIDTH - 80, HEIGHT - 5);
         textAlign(RIGHT);
-        text(String.format("Bullets: %s", bullets.array.size()), WIDTH - 5, HEIGHT - 20);
+        text(String.format("Bullets: %s", bullets.array.size() + playerBullets.array.size()), WIDTH - 5, HEIGHT - 20);
         text(String.format("Enemies: %s", enemies.array.size()), WIDTH - 5, HEIGHT - 35);
         text(String.format("Pickups: %s", pickups.array.size()), WIDTH - 5, HEIGHT - 50);
         textAlign(LEFT);

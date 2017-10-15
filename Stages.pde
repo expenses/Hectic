@@ -2,7 +2,7 @@
 
 // The first stage
 Stage stageOne() {
-    Stage stage = new Stage(1, new Background(resources.nightSky, 0), new Background(resources.clouds, 30));
+    Stage stage = new Stage("Stage\nOne", new Background(resources.nightSky, 0), new Background(resources.clouds, 30));
 
     // Add all the enemies
 
@@ -55,7 +55,7 @@ Stage stageOne() {
 
 Stage stageTwo() {
     Stage stage = new Stage(
-        2, 
+        "Stage\nTwo", 
         new Background(resources.graveyard, 30), new Background(resources.fog, 60), new Background(resources.darkness, 0)
     );
 
@@ -89,11 +89,11 @@ class Stage {
     ArrayList<SpawnTime> spawnTimes = new ArrayList<SpawnTime>();
     Background[] backgrounds;
     float time = 0;
-    int number;
+    String name;
     boolean finished = false;
 
-    Stage(int number, Background... backgrounds) {
-        this.number = number;
+    Stage(String name, Background... backgrounds) {
+        this.name = name;
         // Add in the backgrounds
         this.backgrounds = backgrounds;
         state = State.Playing;
@@ -127,13 +127,17 @@ class Stage {
         // If the stage has been finished and 2 seconds have elapsed, open a menu
         if (finished && time > 2) {
             state = State.MainMenu;
-            submenu = number < 2 ? Submenu.StageComplete : Submenu.GameComplete;
+            submenu = name == "Stage\nOne" ? Submenu.StageComplete : Submenu.GameComplete;
         }
     }
 
     // Draw the backgrounds
     void draw() {
         for (Background background: backgrounds) background.draw();
+
+        // Draw the stage title
+        float titleY = map(time * time, 0, 5, HEIGHT / 4.0 + 8, -100);
+        if (!finished && titleY > -200) drawTitle(name, WIDTH / 2.0, titleY);
     }
 
     // If the stage is finished, reset the time and explode the bullets
